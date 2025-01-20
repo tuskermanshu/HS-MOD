@@ -1,10 +1,8 @@
-import { useState } from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { MenuIcon } from "lucide-react"
-import { Sidebar } from "@/components/Sidebar"
+import { Sidebar } from '@/components/Sidebar'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { MenuIcon } from 'lucide-react'
+import { useState } from 'react'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -16,14 +14,12 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="flex min-h-screen">
       {/* Desktop Sidebar */}
-      <div className="hidden lg:flex">
-        <Sidebar className="w-64" />
-      </div>
+      <Sidebar className="hidden lg:block w-64 shrink-0" />
 
       {/* Mobile Sidebar */}
       <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
         <SheetTrigger asChild>
-          <Button variant="ghost" className="lg:hidden">
+          <Button variant="ghost" className="lg:hidden fixed left-4 top-4">
             <MenuIcon className="h-6 w-6" />
           </Button>
         </SheetTrigger>
@@ -33,11 +29,11 @@ export function MainLayout({ children }: MainLayoutProps) {
       </Sheet>
 
       {/* Main Content */}
-      <main className="flex-1 p-4 lg:p-8">
-        <ScrollArea className="h-full">
+      <main className="flex-1 w-full">
+        <div className="h-full w-full">
           {children}
-        </ScrollArea>
+        </div>
       </main>
     </div>
   )
-} 
+}

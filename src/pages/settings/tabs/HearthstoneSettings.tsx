@@ -1,173 +1,193 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSettings } from '@/store/settings'
+import { memo, useCallback, useEffect } from 'react'
+import SettingSelect from './components/SettingSelect'
+import SettingSwitch from './components/SettingSwitch'
 
-export function HearthstoneSettings() {
+// 游戏功能卡片组件
+const GameFeaturesCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>游戏功能</CardTitle>
-          <CardDescription>基础游戏功能设置</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="quick-battle">快速对战</Label>
-              <p className="text-sm text-muted-foreground">
-                启用酒馆或佣兵AI快速对战模式
-              </p>
-            </div>
-            <Switch id="quick-battle" />
-          </div>
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">游戏功能</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          游戏基础功能和对战相关设置
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pt-3">
+        <SettingSwitch
+          id="quick-battle"
+          label="快速对战"
+          description="启用酒馆或佣兵AI快速对战模式"
+          value={config['Quick Battle'] === 'true'}
+          onChange={checked => onUpdateConfig('Quick Battle', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="show-full-name">显示完整名称</Label>
-              <p className="text-sm text-muted-foreground">
-                显示对手的完整战网ID
-              </p>
-            </div>
-            <Switch id="show-full-name" />
-          </div>
+        <SettingSwitch
+          id="show-full-name"
+          label="显示完整名称"
+          description="显示对手的完整战网名称，同时允许添加当前对手"
+          value={config['Show Full Name'] === 'true'}
+          onChange={checked => onUpdateConfig('Show Full Name', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="show-rank">显示天梯等级</Label>
-              <p className="text-sm text-muted-foreground">
-                显示对手的传说前天梯等级
-              </p>
-            </div>
-            <Switch id="show-rank" />
-          </div>
+        <SettingSwitch
+          id="show-ladder-rank"
+          label="显示天梯等级"
+          description="显示对手的传说前天梯等级"
+          value={config['Show Ladder Rank'] === 'true'}
+          onChange={checked => onUpdateConfig('Show Ladder Rank', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="card-tracker">卡牌追踪</Label>
-              <p className="text-sm text-muted-foreground">
-                预测对手卡牌并提供提示
-              </p>
-            </div>
-            <Switch id="card-tracker" />
-          </div>
+        <SettingSwitch
+          id="card-tracker"
+          label="卡牌追踪"
+          description="预测对手的卡牌并提供提示（如选择；可能识别错误）"
+          value={config['Card Tracker'] === 'true'}
+          onChange={checked => onUpdateConfig('Card Tracker', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="card-reveal">显示已知卡牌</Label>
-              <p className="text-sm text-muted-foreground">
-                已知卡牌正面朝上显示
-              </p>
-            </div>
-            <Switch id="card-reveal" />
-          </div>
-        </CardContent>
-      </Card>
+        <SettingSwitch
+          id="card-reveal"
+          label="显示已知卡牌"
+          description="显示已知卡牌的正面（可能导致炉石自动断线重连）"
+          value={config['Card Reveal'] === 'true'}
+          onChange={checked => onUpdateConfig('Card Reveal', String(checked))}
+        />
 
-      <Card>
-        <CardHeader>
-          <CardTitle>特效设置</CardTitle>
-          <CardDescription>游戏特效相关设置</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="opponent-effects">对手卡牌特效</Label>
-              <p className="text-sm text-muted-foreground">
-                显示对手的卡牌特效（覆盖所有配置）
-              </p>
-            </div>
-            <Switch id="opponent-effects" />
-          </div>
+        <SettingSwitch
+          id="skip-hero-intro"
+          label="跳过英雄介绍"
+          description="跳过英雄介绍动画"
+          value={config['Skip Hero Intro'] === 'true'}
+          onChange={checked => onUpdateConfig('Skip Hero Intro', String(checked))}
+        />
+      </CardContent>
+    </Card>
+  )
+})
+GameFeaturesCard.displayName = 'GameFeaturesCard'
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="signature-effects">签名特效</Label>
-              <p className="text-sm text-muted-foreground">
-                在最高卡牌特效中显示签名特效
-              </p>
-            </div>
-            <Switch id="signature-effects" />
-          </div>
+// 表情系统卡片组件
+const EmoteSystemCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
+  return (
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">表情系统</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          表情和互动相关设置
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pt-3">
+        <SettingSwitch
+          id="unlimited-emote"
+          label="无限表情"
+          description="允许无限制使用表情（最小延迟1.5秒）"
+          value={config['Unlimited Emote'] === 'true'}
+          onChange={checked => onUpdateConfig('Unlimited Emote', String(checked))}
+        />
 
-          <div className="space-y-2">
-            <Label>金卡特效</Label>
-            <Select defaultValue="Default">
-              <SelectTrigger>
-                <SelectValue placeholder="选择特效设置" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Default">默认</SelectItem>
-                <SelectItem value="OnlyMy">仅自己</SelectItem>
-                <SelectItem value="All">全部</SelectItem>
-                <SelectItem value="Disabled">禁用</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+        <SettingSwitch
+          id="thinking-emote"
+          label="思考表情"
+          description="允许使用思考表情"
+          value={config['Thinking Emote'] === 'true'}
+          onChange={checked => onUpdateConfig('Thinking Emote', String(checked))}
+        />
+      </CardContent>
+    </Card>
+  )
+})
+EmoteSystemCard.displayName = 'EmoteSystemCard'
 
-          <div className="space-y-2">
-            <Label>最高品质特效</Label>
-            <Select defaultValue="Default">
-              <SelectTrigger>
-                <SelectValue placeholder="选择特效设置" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="Default">默认</SelectItem>
-                <SelectItem value="OnlyMy">仅自己</SelectItem>
-                <SelectItem value="All">全部</SelectItem>
-                <SelectItem value="Disabled">禁用</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+// 特效设置卡片组件
+const EffectsCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
+  const cardStateOptions = [
+    { value: 'Default', label: '默认' },
+    { value: 'OnlyMy', label: '仅自己' },
+    { value: 'All', label: '全部' },
+    { value: 'Disabled', label: '禁用' },
+  ]
 
-      <Card>
-        <CardHeader>
-          <CardTitle>表情系统</CardTitle>
-          <CardDescription>表情和互动相关设置</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="unlimited-emote">无限表情</Label>
-              <p className="text-sm text-muted-foreground">
-                允许无限使用表情（最小间隔1.5秒）
-              </p>
-            </div>
-            <Switch id="unlimited-emote" />
-          </div>
+  return (
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">特效设置</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          卡牌特效和视觉效果设置
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pt-3">
+        <SettingSwitch
+          id="opponent-card-effects"
+          label="对手卡牌特效"
+          description="显示对手的卡牌特效（覆盖所有配置）"
+          value={config['Opponent Card Effects'] === 'true'}
+          onChange={checked => onUpdateConfig('Opponent Card Effects', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="thinking-emote">思考表情</Label>
-              <p className="text-sm text-muted-foreground">
-                允许思考表情
-              </p>
-            </div>
-            <Switch id="thinking-emote" defaultChecked />
-          </div>
+        <SettingSwitch
+          id="signature-effects"
+          label="签名特效"
+          description="在最高卡牌特效中显示替代卡图（仅影响最高卡牌特效）"
+          value={config['Signature Effects'] === 'true'}
+          onChange={checked => onUpdateConfig('Signature Effects', String(checked))}
+        />
 
-          <div className="space-y-2">
-            <Label>表情限制</Label>
-            <Select defaultValue="-1">
-              <SelectTrigger>
-                <SelectValue placeholder="选择限制次数" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="-1">无限制</SelectItem>
-                <SelectItem value="0">完全禁用</SelectItem>
-                <SelectItem value="3">3次</SelectItem>
-                <SelectItem value="5">5次</SelectItem>
-                <SelectItem value="10">10次</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-sm text-muted-foreground">
-              每局接收表情限制次数，超出后屏蔽对手表情
-            </p>
-          </div>
-        </CardContent>
-      </Card>
+        <SettingSelect
+          label="金卡特效"
+          description="强制使用金卡特效"
+          value={config['Golden Card Effects'] || 'Default'}
+          onChange={value => onUpdateConfig('Golden Card Effects', value)}
+          options={cardStateOptions}
+          placeholder="选择特效模式"
+        />
+
+        <SettingSelect
+          label="最高特效"
+          description="强制使用最高特效（优先级：钻石>签名>金色>普通）"
+          value={config['Highest Card Effects'] || 'Default'}
+          onChange={value => onUpdateConfig('Highest Card Effects', value)}
+          options={cardStateOptions}
+          placeholder="选择特效模式"
+        />
+      </CardContent>
+    </Card>
+  )
+})
+EffectsCard.displayName = 'EffectsCard'
+
+// 主组件
+export function HearthstoneSettings() {
+  const { config, loadConfig, checkStatus, isConnected, updateConfig } = useSettings()
+
+  const handleUpdateConfig = useCallback((key: string, value: any) => {
+    updateConfig(key, value)
+  }, [updateConfig])
+
+  useEffect(() => {
+    loadConfig()
+    const checkInterval = setInterval(checkStatus, 30000)
+    return () => clearInterval(checkInterval)
+  }, [loadConfig, checkStatus])
+
+  if (!isConnected)
+    return <div>未连接到 HsMod 服务</div>
+
+  return (
+    <div className="space-y-6">
+      <GameFeaturesCard config={config} onUpdateConfig={handleUpdateConfig} />
+      <EmoteSystemCard config={config} onUpdateConfig={handleUpdateConfig} />
+      <EffectsCard config={config} onUpdateConfig={handleUpdateConfig} />
     </div>
   )
-} 
+}

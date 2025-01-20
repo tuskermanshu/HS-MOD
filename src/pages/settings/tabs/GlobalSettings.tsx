@@ -1,104 +1,190 @@
-import { useState } from "react"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Label } from '@/components/ui/label'
+import { Slider } from '@/components/ui/slider'
+import { useSettings } from '@/store/settings'
+import { memo, useCallback, useEffect } from 'react'
+import SettingSelect from './components/SettingSelect'
+import SettingSwitch from './components/SettingSwitch'
 
-export function GlobalSettings() {
-  const [speedMultiplier, setSpeedMultiplier] = useState(10)
+// 常量配置
+const CONSTANTS = {
+  LANGUAGE_OPTIONS: [
+    { value: 'zhCN', label: '简体中文' },
+    { value: 'enUS', label: 'English' },
+  ],
+  TEMPLATE_OPTIONS: [
+    { value: 'DoNothing', label: '暂无模板' },
+    { value: 'AwayFromKeyboard', label: '远离键盘' },
+    { value: 'AntiAwayFromKeyboard', label: '不远离键盘' },
+  ],
+  FRAME_RATE_OPTIONS: [
+    { value: '30', label: '30 FPS' },
+    { value: '60', label: '60 FPS' },
+    { value: '120', label: '120 FPS' },
+    { value: '144', label: '144 FPS' },
+    { value: '240', label: '240 FPS' },
+  ],
+  SPEED_MULTIPLIER: {
+    MIN: -32,
+    MAX: 32,
+    STEP: 1,
+  },
+} as const
+
+const SpeedMultiplierSlider = memo(({ value, onChange }: { value: number, onChange: (value: number) => void }) => {
+  const handleChange = useCallback((values: number[]) => {
+    onChange(values[0])
+  }, [onChange])
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>基础设置</CardTitle>
-          <CardDescription>调整应用的基本运行参数</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="flex items-center justify-between space-x-2">
-            <Label htmlFor="hsmod-status">HsMod 状态</Label>
-            <Switch id="hsmod-status" />
-          </div>
-
-          <div className="space-y-2">
-            <Label>语言设置</Label>
-            <Select defaultValue="enUS">
-              <SelectTrigger>
-                <SelectValue placeholder="选择语言" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="enUS">English (US)</SelectItem>
-                <SelectItem value="enGB">English (GB)</SelectItem>
-                <SelectItem value="zhCN">简体中文</SelectItem>
-                <SelectItem value="zhTW">繁體中文</SelectItem>
-                <SelectItem value="jaJP">日本語</SelectItem>
-                <SelectItem value="koKR">한국어</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label>配置模板</Label>
-            <Select defaultValue="DoNothing">
-              <SelectTrigger>
-                <SelectValue placeholder="选择配置模板" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="DoNothing">不执行操作</SelectItem>
-                <SelectItem value="AwayFromKeyboard">挂机模式</SelectItem>
-                <SelectItem value="AntiAwayFromKeyboard">反挂机模式</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <Label htmlFor="shortcut-status">快捷键状态</Label>
-            <Switch id="shortcut-status" />
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <Label htmlFor="speed-gear">速度齿轮状态</Label>
-            <Switch id="speed-gear" />
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label>速度倍率</Label>
-              <span className="text-sm text-muted-foreground">{speedMultiplier}x</span>
-            </div>
-            <Slider
-              value={[speedMultiplier]}
-              onValueChange={([value]) => setSpeedMultiplier(value)}
-              max={32}
-              min={-32}
-              step={1}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
-            />
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <Label htmlFor="show-fps">显示 FPS</Label>
-            <Switch id="show-fps" />
-          </div>
-
-          <div className="space-y-2">
-            <Label>游戏帧率</Label>
-            <Select defaultValue="-1">
-              <SelectTrigger>
-                <SelectValue placeholder="选择帧率" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="-1">默认</SelectItem>
-                <SelectItem value="30">30 FPS</SelectItem>
-                <SelectItem value="60">60 FPS</SelectItem>
-                <SelectItem value="120">120 FPS</SelectItem>
-                <SelectItem value="144">144 FPS</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="space-y-2">
+      <div className="space-y-0.5">
+        <Label className="text-base">速度倍率</Label>
+        <p className="text-[13px] text-muted-foreground">设置游戏速度倍率</p>
+      </div>
+      <div className="w-full">
+        <div className="flex flex-col space-y-4">
+          <Slider
+            min={CONSTANTS.SPEED_MULTIPLIER.MIN}
+            max={CONSTANTS.SPEED_MULTIPLIER.MAX}
+            step={CONSTANTS.SPEED_MULTIPLIER.STEP}
+            value={[value]}
+            onValueChange={handleChange}
+            className="w-[60%]"
+          />
+          <span className="text-sm text-muted-foreground">
+            当前值:
+            {value}
+          </span>
+        </div>
+      </div>
     </div>
   )
-} 
+})
+SpeedMultiplierSlider.displayName = 'SpeedMultiplierSlider'
+
+// 卡片组件
+const SystemStatusCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
+  const handleHsModStatusChange = useCallback((value: boolean) => {
+    onUpdateConfig('HsMod Status', value ? 'true' : 'false')
+  }, [onUpdateConfig])
+
+  return (
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">系统状态</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          基础系统配置和状态显示
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pt-3">
+        <SettingSwitch
+          id="hsmod-status"
+          label="HsMod 状态"
+          description="启用或禁用 HsMod"
+          value={config['HsMod Status'] === 'true'}
+          onChange={handleHsModStatusChange}
+        />
+        <SettingSelect
+          label="语言设置"
+          description="选择界面显示语言"
+          value={config['HsMod Language']}
+          onChange={(value: string) => onUpdateConfig('HsMod Language', value)}
+          options={[...CONSTANTS.LANGUAGE_OPTIONS]}
+          placeholder="选择语言"
+        />
+        <SettingSelect
+          label="配置模板"
+          description="选择预设配置模板"
+          value={config['Configuration Template']}
+          onChange={(value: string) => onUpdateConfig('Configuration Template', value)}
+          options={[...CONSTANTS.TEMPLATE_OPTIONS]}
+          placeholder="选择模板"
+        />
+      </CardContent>
+    </Card>
+  )
+})
+SystemStatusCard.displayName = 'SystemStatusCard'
+
+const PerformanceCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
+  return (
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">性能设置</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          游戏性能和显示相关配置
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pt-3">
+        <SettingSwitch
+          id="shortcut-status"
+          label="快捷键状态"
+          description="启用或禁用快捷键功能"
+          value={config['Shortcut Status'] === 'true'}
+          onChange={value => onUpdateConfig('Shortcut Status', String(value))}
+        />
+        <SettingSwitch
+          id="speed-gear"
+          label="速度齿轮状态"
+          description="启用或禁用速度调节功能"
+          value={config['Speed Gear Status'] === 'true'}
+          onChange={value => onUpdateConfig('Speed Gear Status', String(value))}
+        />
+        <SpeedMultiplierSlider
+          value={config['Speed Multiplier'] || 0}
+          onChange={value => onUpdateConfig('Speed Multiplier', value)}
+        />
+        <SettingSwitch
+          id="show-fps"
+          label="显示 FPS"
+          description="显示游戏帧率信息"
+          value={config['Show FPS'] === 'true'}
+          onChange={value => onUpdateConfig('Show FPS', String(value))}
+        />
+        <SettingSelect
+          label="游戏帧率"
+          description="设置游戏目标帧率"
+          value={String(config['Game Frame Rate'])}
+          onChange={value => onUpdateConfig('Game Frame Rate', Number(value))}
+          options={[...CONSTANTS.FRAME_RATE_OPTIONS]}
+          placeholder="选择帧率"
+        />
+      </CardContent>
+    </Card>
+  )
+})
+PerformanceCard.displayName = 'PerformanceCard'
+
+// 主组件
+export function GlobalSettings() {
+  const { config, loadConfig, checkStatus, isConnected, updateConfig } = useSettings()
+
+  const handleUpdateConfig = useCallback((key: string, value: any) => {
+    updateConfig(key, value)
+  }, [updateConfig])
+
+  useEffect(() => {
+    loadConfig()
+    const checkInterval = setInterval(checkStatus, 30000)
+    return () => clearInterval(checkInterval)
+  }, [loadConfig, checkStatus])
+
+  // if (loading)
+  //   return <div>Loading...</div>
+  if (!isConnected)
+    return <div>未连接到 HsMod 服务</div>
+
+  return (
+    <div className="space-y-6">
+      <SystemStatusCard config={config} onUpdateConfig={handleUpdateConfig} />
+      <PerformanceCard config={config} onUpdateConfig={handleUpdateConfig} />
+    </div>
+  )
+}

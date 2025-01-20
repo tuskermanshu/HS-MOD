@@ -1,16 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 export function useSystemType() {
   const [systemType, setSystemType] = useState<string>('')
 
   useEffect(() => {
-    const handleSystemType = (_event: any, type: string) => {
+    const handleSystemType = (type: string) => {
       setSystemType(type)
     }
 
-    window.ipcRenderer.on('system-type', handleSystemType)
+    window.electron.ipcRenderer.on('system-type', handleSystemType)
+
     return () => {
-      window.ipcRenderer.off('system-type', handleSystemType)
+      // contextBridge 会自动处理清理工作
     }
   }, [])
 

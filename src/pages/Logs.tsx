@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 
 export function Logs() {
   return (
@@ -24,4 +24,4 @@ export function Logs() {
       </div>
     </div>
   )
-} 
+}

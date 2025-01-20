@@ -1,0 +1,9 @@
+development:
+  api:
+    host: 'http://127.0.0.1'
+    port: 58744
+
+production:
+  api:
+    host: 'http://127.0.0.1'
+    port: 58744 

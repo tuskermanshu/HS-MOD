@@ -1,17 +1,17 @@
 {
-  "name": "electron-vite-react",
+  "name": "HsMod",
+  "type": "module",
   "version": "2.2.0",
-  "main": "dist-electron/main/index.js",
-  "description": "Electron Vite React boilerplate.",
-  "author": "草鞋没号 <308487730@qq.com>",
-  "license": "MIT",
   "private": true,
+  "description": "Electron Vite React boilerplate.",
+  "author": "Tsukermanshu <tuskermanshu@yeah.net>",
+  "license": "MIT",
+  "main": "dist-electron/main/index.js",
   "debug": {
     "env": {
       "VITE_DEV_SERVER_URL": "http://127.0.0.1:7777/"
     }
   },
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && electron-builder",
@@ -35,14 +35,19 @@
     "@types/react-router-dom": "^5.3.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "electron-store": "^10.0.0",
     "electron-updater": "^6.3.9",
+    "js-yaml": "^4.1.0",
     "lucide-react": "^0.471.1",
     "react-router-dom": "^7.1.2",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zustand": "^5.0.3"
   },
   "devDependencies": {
+    "@antfu/eslint-config": "^3.14.0",
     "@playwright/test": "^1.48.2",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.10.7",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
@@ -50,6 +55,7 @@
     "autoprefixer": "^10.4.20",
     "electron": "^33.2.0",
     "electron-builder": "^24.13.3",
+    "eslint": "^9.18.0",
     "postcss": "^8.4.49",
     "postcss-import": "^16.1.0",
     "react": "^18.3.1",

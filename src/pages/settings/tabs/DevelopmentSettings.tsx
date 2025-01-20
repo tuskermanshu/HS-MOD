@@ -1,96 +1,117 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useSettings } from '@/store/settings'
+import { memo, useCallback, useEffect } from 'react'
+import SettingInput from './components/SettingInput'
+import SettingSwitch from './components/SettingSwitch'
 
-export function DevelopmentSettings() {
+// 开发设置卡片组件
+const DevelopmentCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>开发设置</CardTitle>
-          <CardDescription>调整开发相关参数</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-2">
-            <Label>炉石日志路径</Label>
-            <Input 
-              defaultValue="/Applications/Hearthstone/Hearthstone.app/Contents/../../Logs/Hearthstone"
-              placeholder="输入日志路径"
-            />
-          </div>
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">开发设置</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          开发相关配置和调试选项
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pt-3">
+        <SettingInput
+          label="炉石日志"
+          description="炉石进程日志文件路径（相对于炉石）"
+          value={config['Hearthstone Log'] || ''}
+          onChange={value => onUpdateConfig('Hearthstone Log', value)}
+          placeholder="输入日志文件路径"
+        />
 
-          <div className="space-y-2">
-            <Label>对战日志路径</Label>
-            <Input 
-              defaultValue="/Applications/Hearthstone/BepInEx/HsMod/match.log"
-              placeholder="输入对战日志路径"
-            />
-          </div>
+        <SettingInput
+          label="对局日志"
+          description="炉石对局日志文件路径（相对于炉石）"
+          value={config['Match Log'] || ''}
+          onChange={value => onUpdateConfig('Match Log', value)}
+          placeholder="输入对局日志路径"
+        />
 
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <Label>自动退出计时器</Label>
-              <span className="text-sm text-muted-foreground">秒</span>
-            </div>
-            <Input 
-              type="number"
-              defaultValue="0"
-              placeholder="输入秒数"
-            />
-            <p className="text-sm text-muted-foreground">设置为0或负数禁用此选项</p>
-          </div>
+        <SettingInput
+          label="自动退出计时器"
+          description="游戏结束后自动退出的等待时间（秒），x<=0 禁用此选项"
+          value={config['Auto Quit Timer'] || 0}
+          onChange={value => onUpdateConfig('Auto Quit Timer', Number(value))}
+          type="number"
+          className="w-[40%]"
+          min={0}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="simulate-pack">模拟开包</Label>
-              <p className="text-sm text-muted-foreground">
-                启用模拟开包功能（建议重启炉石）
-              </p>
-            </div>
-            <Switch id="simulate-pack" />
-          </div>
+        <SettingInput
+          label="Web服务器端口"
+          description="Web服务器监听端口"
+          value={config['Web Server Port'] || 58744}
+          onChange={value => onUpdateConfig('Web Server Port', Number(value))}
+          type="number"
+          className="w-[40%]"
+          min={1}
+          max={65535}
+        />
 
-          <div className="space-y-2">
-            <Label>Web服务器端口</Label>
-            <Input 
-              type="number"
-              defaultValue="58744"
-              min="1"
-              max="65535"
-              placeholder="输入端口号"
-            />
-          </div>
+        <SettingInput
+          label="网页背景图片"
+          description="设置Web页面背景图片"
+          value={config['Web Page Background Image'] || ''}
+          onChange={value => onUpdateConfig('Web Page Background Image', value)}
+          placeholder="输入背景图片URL"
+        />
 
-          <div className="space-y-2">
-            <Label>网页背景图片</Label>
-            <Input 
-              defaultValue="https://imgapi.cn/cos.php"
-              placeholder="输入图片URL"
-            />
-          </div>
+        <SettingSwitch
+          id="simulate-pack"
+          label="模拟开包"
+          description="启用模拟开包功能（建议修改后重启炉石，启用可能导致开包统计异常）"
+          value={config['Simulate Pack Opening'] === 'true'}
+          onChange={checked => onUpdateConfig('Simulate Pack Opening', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="webshell">Webshell</Label>
-              <p className="text-sm text-muted-foreground">
-                启用Webshell功能
-              </p>
-            </div>
-            <Switch id="webshell" />
-          </div>
+        <SettingSwitch
+          id="webshell"
+          label="Webshell"
+          description="Webshell 开关"
+          value={config.Webshell === 'true'}
+          onChange={checked => onUpdateConfig('Webshell', String(checked))}
+        />
 
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-1">
-              <Label htmlFor="internal-mode">内部模式</Label>
-              <p className="text-sm text-muted-foreground">
-                切换到内部模式（需要重启炉石）
-              </p>
-            </div>
-            <Switch id="internal-mode" />
-          </div>
-        </CardContent>
-      </Card>
+        <SettingSwitch
+          id="internal-mode"
+          label="内部模式"
+          description="切换到内部模式（需要重启炉石）"
+          value={config['Internal Mode'] === 'true'}
+          onChange={checked => onUpdateConfig('Internal Mode', String(checked))}
+        />
+      </CardContent>
+    </Card>
+  )
+})
+DevelopmentCard.displayName = 'DevelopmentCard'
+
+// 主组件
+export function DevelopmentSettings() {
+  const { config, loadConfig, checkStatus, isConnected, updateConfig } = useSettings()
+
+  const handleUpdateConfig = useCallback((key: string, value: any) => {
+    updateConfig(key, value)
+  }, [updateConfig])
+
+  useEffect(() => {
+    loadConfig()
+    const checkInterval = setInterval(checkStatus, 30000)
+    return () => clearInterval(checkInterval)
+  }, [loadConfig, checkStatus])
+
+  if (!isConnected)
+    return <div>未连接到 HsMod 服务</div>
+
+  return (
+    <div className="space-y-6">
+      <DevelopmentCard config={config} onUpdateConfig={handleUpdateConfig} />
     </div>
   )
-} 
+}

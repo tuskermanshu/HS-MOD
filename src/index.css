@@ -111,6 +111,11 @@ code {
     --input: 214.3 31.8% 91.4%;
     --ring: 221.2 83.2% 53.3%;
     --radius: 0.5rem;
+    
+    /* Select 组件变量 */
+    --select-trigger-color: var(--foreground);
+    --select-content-color: 222.2 84% 4.9%;   /* 浅色模式下的深色文字 */
+    --select-content-bg: 0 0% 100%;           /* 浅色背景 */
   }
 
   .dark {
@@ -133,7 +138,74 @@ code {
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
+    
+    /* Select 组件暗色模式变量 */
+    --select-trigger-color: var(--foreground);
+    --select-content-color: 210 40% 98%;      /* 暗色模式下的浅色文字 */
+    --select-content-bg: 222.2 84% 4.9%;      /* 深色背景 */
   }
+
+  /* 应用样式到 Select 组件 */
+  .select-trigger {
+    color: hsl(var(--select-trigger-color));
+  }
+
+  .select-content {
+    @apply bg-popover text-popover-foreground;
+  }
+
+  .select-item {
+    @apply text-popover-foreground;
+  }
+
+  /* 确保选项在各种状态下都保持正确的颜色 */
+  .select-item[data-highlighted] {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  .select-item:focus {
+    @apply text-accent-foreground;
+  }
+
+  .select-item:hover {
+    @apply text-accent-foreground;
+  }
+
+  /* Select 组件样式覆盖 */
+  [role="combobox"] {
+    @apply text-foreground;
+  }
+
+  [role="combobox"] > span {
+    @apply text-foreground !important;
+  }
+
+  [role="listbox"] {
+    @apply bg-popover text-popover-foreground;
+  }
+
+  [role="option"] {
+    @apply text-popover-foreground;
+  }
+
+  [role="option"][data-highlighted] {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  /* 确保下拉选项在各种状态下的颜色 */
+  [role="option"]:focus {
+    @apply text-accent-foreground;
+  }
+
+  [role="option"]:hover {
+    @apply text-accent-foreground;
+  }
+}
+
+/* 确保下拉选项在hover时保持正确的颜色 */
+.select-item[data-highlighted] {
+  color: hsl(var(--select-content-color));
+  background-color: hsl(var(--primary) / 0.1);
 }
 
 @layer base {
@@ -143,4 +215,36 @@ code {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* 隐藏默认滚动条 */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* 自定义滚动条样式 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.3);
 }

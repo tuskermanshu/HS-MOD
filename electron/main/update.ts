@@ -1,22 +1,21 @@
-import { app, ipcMain } from 'electron'
-import { createRequire } from 'node:module'
 import type {
   ProgressInfo,
   UpdateDownloadedEvent,
   UpdateInfo,
 } from 'electron-updater'
+import { createRequire } from 'node:module'
+import { app, ipcMain } from 'electron'
 
-const { autoUpdater } = createRequire(import.meta.url)('electron-updater');
+const { autoUpdater } = createRequire(import.meta.url)('electron-updater')
 
 export function update(win: Electron.BrowserWindow) {
-
   // When set to false, the update download will be triggered through the API
   autoUpdater.autoDownload = false
   autoUpdater.disableWebInstaller = false
   autoUpdater.allowDowngrade = false
 
   // start check
-  autoUpdater.on('checking-for-update', function () { })
+  autoUpdater.on('checking-for-update', () => { })
   // update available
   autoUpdater.on('update-available', (arg: UpdateInfo) => {
     win.webContents.send('update-can-available', { update: true, version: app.getVersion(), newVersion: arg?.version })
@@ -35,7 +34,8 @@ export function update(win: Electron.BrowserWindow) {
 
     try {
       return await autoUpdater.checkForUpdatesAndNotify()
-    } catch (error) {
+    }
+    catch (error) {
       return { message: 'Network error', error }
     }
   })
@@ -47,7 +47,8 @@ export function update(win: Electron.BrowserWindow) {
         if (error) {
           // feedback download error message
           event.sender.send('update-error', { message: error.message, error })
-        } else {
+        }
+        else {
           // feedback update progress message
           event.sender.send('download-progress', progressInfo)
         }
@@ -55,7 +56,7 @@ export function update(win: Electron.BrowserWindow) {
       () => {
         // feedback update downloaded message
         event.sender.send('update-downloaded')
-      }
+      },
     )
   })
 

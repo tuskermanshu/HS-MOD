@@ -1,8 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { MainLayout } from "./layouts/MainLayout"
-import { Settings } from "./pages/settings"
-import { Logs } from "./pages/Logs"
-import { Shortcuts } from "./pages/Shortcuts"
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { MainLayout } from './layouts/MainLayout'
+import { Logs } from './pages/Logs'
+import { Settings } from './pages/settings'
+import { Shortcuts } from './pages/Shortcuts'
 
 function App() {
   return (
