@@ -8,12 +8,18 @@ import { useLocation, useNavigate } from 'react-router-dom'
 
 interface SidebarProps {
   className?: string
+  onClose?: () => void
 }
 
-export function Sidebar({ className }: SidebarProps) {
+export function Sidebar({ className, onClose }: SidebarProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { systemType } = useSystemType()
+
+  const handleMenuClick = (path: string) => {
+    navigate(path)
+    onClose?.()
+  }
 
   const menuItems = [
     {
@@ -53,7 +59,7 @@ export function Sidebar({ className }: SidebarProps) {
               key={item.path}
               variant={location.pathname === item.path ? 'secondary' : 'ghost'}
               className="w-full justify-start h-11 px-4 hover:bg-accent hover:text-accent-foreground"
-              onClick={() => navigate(item.path)}
+              onClick={() => handleMenuClick(item.path)}
             >
               <item.icon className="mr-3 h-5 w-5" />
               <span className="text-base">{item.title}</span>

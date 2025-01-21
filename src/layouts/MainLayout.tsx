@@ -52,13 +52,13 @@ export function MainLayout({ children }: MainLayoutProps) {
               应用程序的导航菜单，包含所有主要功能入口
             </SheetDescription>
           </SheetHeader>
-          <Sidebar />
+          <Sidebar onClose={() => setOpen(false)} />
         </SheetContent>
       </Sheet>
 
       {/* 大屏幕侧边栏 */}
       <div className={`hidden xl:block w-[280px] border-r ${showSidebar ? '' : 'xl:hidden'}`}>
-        <Sidebar />
+        <Sidebar onClose={() => setShowSidebar(false)} />
       </div>
 
       {/* 主内容区 */}
