@@ -1,37 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
 import { useSettings } from '@/store/settings'
 import { memo, useCallback, useEffect } from 'react'
 import SettingSelect from './components/SettingSelect'
 import SettingSwitch from './components/SettingSwitch'
-
-// 选项常量
-const deviceTemplateOptions = [
-  { value: 'Default', label: '默认' },
-  { value: 'iPad', label: 'iPad' },
-  { value: 'iPhone', label: 'iPhone' },
-  { value: 'Phone', label: '手机' },
-  { value: 'Tablet', label: '平板' },
-  { value: 'HuaweiPhone', label: '华为手机' },
-  { value: 'Custom', label: '自定义' },
-]
-
-const deviceOsOptions = [
-  { value: 'PC', label: 'PC' },
-  { value: 'Mac', label: 'Mac' },
-  { value: 'iOS', label: 'iOS' },
-  { value: 'Android', label: 'Android' },
-]
-
-const screenSizeOptions = [
-  { value: 'Phone', label: '手机' },
-  { value: 'MiniTablet', label: '小型平板' },
-  { value: 'Tablet', label: '平板' },
-  { value: 'PC', label: 'PC' },
-]
 
 const popupResponseOptions = [
   { value: 'OK', label: '确定' },

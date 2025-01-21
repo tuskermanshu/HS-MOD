@@ -12,6 +12,7 @@ export function useSystemType() {
 
     return () => {
       // contextBridge 会自动处理清理工作
+      window.electron.ipcRenderer.off('system-type', handleSystemType)
     }
   }, [])
 

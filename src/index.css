@@ -200,6 +200,11 @@ code {
   [role="option"]:hover {
     @apply text-accent-foreground;
   }
+
+  /* 添加以下样式 */
+  html, body, #root {
+    @apply h-full overflow-hidden;
+  }
 }
 
 /* 确保下拉选项在hover时保持正确的颜色 */

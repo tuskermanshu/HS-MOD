@@ -10,11 +10,10 @@ import { SkinSettings } from './tabs/SkinSettings'
 
 export function Settings() {
   return (
-    <div className="h-full w-full">
-      <div className="p-6 space-y-6 max-w-[1200px]">
+    <div className="h-full w-full overflow-y-auto">
+      <div className="p-6 space-y-6 max-w-[1200px] mt-2">
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">配置管理</h2>
-          <p className="text-muted-foreground">管理您的应用程序配置</p>
         </div>
 
         <Tabs defaultValue="global" className="flex flex-col flex-1">

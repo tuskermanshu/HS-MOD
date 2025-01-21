@@ -117,7 +117,7 @@ const HeroCard = memo(({ config, onUpdateConfig }: {
           type="number"
           value={config.Hero || '-1'}
           onChange={value => onUpdateConfig('Hero', value)}
-          description="-1表示不修改（谨慎使用，非挂机不建议。优先级低于默认英雄。通常从HsSkins.cfg加载英雄皮肤，然后按F4更新。如果在游戏中，还需要游戏内断线模拟）"
+          description="-1表示不修改（谨慎使用,非挂机不建议。优先级低于默认英雄）"
         />
 
         <SettingInput

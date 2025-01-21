@@ -27,39 +27,42 @@ export function Sidebar({ className }: SidebarProps) {
       path: '/logs',
     },
     {
-      title: '快捷键设置',
+      title: '快捷键设置(TBD)',
       icon: Keyboard,
       path: '/shortcuts',
     },
   ]
 
   return (
-    <div className={cn('flex flex-col h-full bg-background border-r', className)}>
-      <div className="p-4 flex justify-between items-center">
-        <div>
-          <h2 className="text-lg font-semibold">HsMod</h2>
+    <div className={cn('flex flex-col h-full bg-background', className)}>
+      <div className="p-6">
+        <div className="space-y-1">
+          <h2 className="text-xl font-bold tracking-tight">HsMod</h2>
           <p className="text-sm text-muted-foreground">
             当前系统:
+            {' '}
             {systemType}
           </p>
         </div>
-        <ThemeToggle />
       </div>
       <Separator />
-      <div className="flex-1 p-4">
-        <nav className="space-y-2">
+      <div className="flex-1 px-4 py-6">
+        <nav className="space-y-3">
           {menuItems.map(item => (
             <Button
               key={item.path}
               variant={location.pathname === item.path ? 'secondary' : 'ghost'}
-              className="w-full justify-start"
+              className="w-full justify-start h-11 px-4 hover:bg-accent hover:text-accent-foreground"
               onClick={() => navigate(item.path)}
             >
-              <item.icon className="mr-2 h-4 w-4" />
-              {item.title}
+              <item.icon className="mr-3 h-5 w-5" />
+              <span className="text-base">{item.title}</span>
             </Button>
           ))}
         </nav>
+      </div>
+      <div className="p-6 border-t">
+        <ThemeToggle />
       </div>
     </div>
   )

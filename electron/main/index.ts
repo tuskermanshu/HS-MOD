@@ -4,6 +4,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { app, BrowserWindow, ipcMain, shell } from 'electron'
 import { config } from './config'
+import { setupLogsHandlers } from './logs'
 import { setupSettingsHandlers } from './settings'
 import { update } from './update'
 
@@ -37,7 +38,11 @@ const indexHtml = path.join(RENDERER_DIST, 'index.html')
 async function createWindow() {
   win = new BrowserWindow({
     title: 'Main window',
-    icon: path.join(process.env.VITE_PUBLIC, 'favicon.ico'),
+    width: 794,
+    height: 572,
+    resizable: false,
+    useContentSize: true,
+    center: true,
     webPreferences: {
       preload,
       nodeIntegration: false,
@@ -75,6 +80,8 @@ async function createWindow() {
 
   // Auto update
   update(win)
+
+  setupLogsHandlers()
 }
 
 app.whenReady().then(() => {
