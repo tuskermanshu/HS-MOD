@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { HelpDialog } from '@/pages/guide'
 import { Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -18,6 +19,7 @@ interface MainLayoutProps {
 export function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
+  const [showHelp, setShowHelp] = useState(false)
 
   useEffect(() => {
     // 监听窗口大小变化
@@ -52,13 +54,13 @@ export function MainLayout({ children }: MainLayoutProps) {
               应用程序的导航菜单，包含所有主要功能入口
             </SheetDescription>
           </SheetHeader>
-          <Sidebar onClose={() => setOpen(false)} />
+          <Sidebar onClose={() => setOpen(false)} onHelp={() => setShowHelp(true)} />
         </SheetContent>
       </Sheet>
 
       {/* 大屏幕侧边栏 */}
       <div className={`hidden xl:block w-[280px] border-r ${showSidebar ? '' : 'xl:hidden'}`}>
-        <Sidebar onClose={() => setShowSidebar(false)} />
+        <Sidebar onClose={() => setShowSidebar(false)} onHelp={() => setShowHelp(true)} />
       </div>
 
       {/* 主内容区 */}
@@ -67,6 +69,9 @@ export function MainLayout({ children }: MainLayoutProps) {
           {children}
         </div>
       </main>
+
+      {/* 帮助对话框 */}
+      <HelpDialog open={showHelp} onOpenChange={setShowHelp} />
     </div>
   )
 }

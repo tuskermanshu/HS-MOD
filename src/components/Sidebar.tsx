@@ -3,15 +3,16 @@ import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
 import { useSystemType } from '@/hooks/useSystemType'
 import { cn } from '@/lib/utils'
-import { FileText, Keyboard, Settings } from 'lucide-react'
+import { FileText, HelpCircle, Keyboard, Settings } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 interface SidebarProps {
   className?: string
   onClose?: () => void
+  onHelp?: () => void
 }
 
-export function Sidebar({ className, onClose }: SidebarProps) {
+export function Sidebar({ className, onClose, onHelp }: SidebarProps) {
   const navigate = useNavigate()
   const location = useLocation()
   const { systemType } = useSystemType()
@@ -67,8 +68,15 @@ export function Sidebar({ className, onClose }: SidebarProps) {
           ))}
         </nav>
       </div>
-      <div className="p-6 border-t">
+      <div className="p-6 border-t flex items-center justify-between">
         <ThemeToggle />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onHelp}
+        >
+          <HelpCircle className="h-5 w-5" />
+        </Button>
       </div>
     </div>
   )
