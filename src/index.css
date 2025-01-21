@@ -248,3 +248,41 @@ code {
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.3);
 }
+
+/* 删除之前的 Select 相关样式，替换为以下内容 */
+@layer components {
+  .select-trigger {
+    @apply flex h-9 w-full items-center justify-between rounded-md border px-3 text-sm 
+           transition-colors duration-200 ease-in-out
+           focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .select-content {
+    @apply relative z-50 min-w-[8rem] overflow-hidden rounded-md
+           animate-in fade-in-0 zoom-in-95
+           data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95;
+  }
+
+  .select-item {
+    @apply relative flex w-full select-none items-center rounded-sm py-2 px-3 text-sm
+           transition-colors duration-200 ease-in-out
+           outline-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50;
+  }
+
+  .select-item[data-highlighted] {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  .select-value {
+    @apply text-sm font-normal leading-none;
+  }
+
+  .select-trigger:focus {
+    @apply ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+
+  .select-content {
+    @apply shadow-lg;
+  }
+}

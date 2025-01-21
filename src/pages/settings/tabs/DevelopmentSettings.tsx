@@ -40,7 +40,6 @@ const DevelopmentCard = memo(({ config, onUpdateConfig }: {
           value={config['Auto Quit Timer'] || 0}
           onChange={value => onUpdateConfig('Auto Quit Timer', Number(value))}
           type="number"
-          className="w-[40%]"
           min={0}
         />
 
@@ -50,7 +49,6 @@ const DevelopmentCard = memo(({ config, onUpdateConfig }: {
           value={config['Web Server Port'] || 58744}
           onChange={value => onUpdateConfig('Web Server Port', Number(value))}
           type="number"
-          className="w-[40%]"
           min={1}
           max={65535}
         />
@@ -61,14 +59,6 @@ const DevelopmentCard = memo(({ config, onUpdateConfig }: {
           value={config['Web Page Background Image'] || ''}
           onChange={value => onUpdateConfig('Web Page Background Image', value)}
           placeholder="输入背景图片URL"
-        />
-
-        <SettingSwitch
-          id="simulate-pack"
-          label="模拟开包"
-          description="启用模拟开包功能（建议修改后重启炉石，启用可能导致开包统计异常）"
-          value={config['Simulate Pack Opening'] === 'true'}
-          onChange={checked => onUpdateConfig('Simulate Pack Opening', String(checked))}
         />
 
         <SettingSwitch

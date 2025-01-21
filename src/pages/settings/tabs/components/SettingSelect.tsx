@@ -1,5 +1,5 @@
-import { Label } from '@radix-ui/react-label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@radix-ui/react-select'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { memo } from 'react'
 
 interface SettingSelectProps {
@@ -8,8 +8,7 @@ interface SettingSelectProps {
   value: string
   onChange: (value: string) => void
   options: Array<{ value: string, label: string }>
-  placeholder: string
-  className?: string
+  placeholder?: string
 }
 
 const SettingSelect = memo(({
@@ -18,30 +17,35 @@ const SettingSelect = memo(({
   value,
   onChange,
   options,
-  placeholder,
-  className = 'w-[60%]',
+  placeholder = '请选择',
 }: SettingSelectProps) => (
-  <div className="space-y-2">
+  <div className="flex items-center justify-between">
     <div className="space-y-0.5">
-      <Label className="text-base">{label}</Label>
-      <p className="text-[13px] text-muted-foreground">{description}</p>
+      <Label className="text-sm font-medium">
+        {label}
+      </Label>
+      <p className="text-[13px] text-muted-foreground">
+        {description}
+      </p>
     </div>
-    <div className={className}>
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="h-9">
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-        <SelectContent>
-          {options.map(option => (
-            <SelectItem key={option.value} value={option.value}>
-              {option.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </div>
+    <Select value={value} onValueChange={onChange}>
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map(option => (
+          <SelectItem
+            key={option.value}
+            value={option.value}
+          >
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   </div>
 ))
+
 SettingSelect.displayName = 'SettingSelect'
 
 export default SettingSelect

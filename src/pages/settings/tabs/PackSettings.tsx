@@ -1,161 +1,228 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Switch } from '@/components/ui/switch'
+import { useSettings } from '@/store/settings'
+import { memo, useCallback, useEffect } from 'react'
+import SettingInput from './components/SettingInput'
+import SettingSelect from './components/SettingSelect'
+import SettingSwitch from './components/SettingSwitch'
 
+const deviceTemplateOptions = [
+  { value: 'Default', label: '默认' },
+  { value: 'iPad', label: 'iPad' },
+  { value: 'iPhone', label: 'iPhone' },
+  { value: 'Phone', label: '手机' },
+  { value: 'Tablet', label: '平板' },
+  { value: 'HuaweiPhone', label: '华为手机' },
+  { value: 'Custom', label: '自定义' },
+]
+
+const deviceOSOptions = [
+  { value: 'PC', label: 'PC' },
+  { value: 'Mac', label: 'Mac' },
+  { value: 'iOS', label: 'iOS' },
+  { value: 'Android', label: 'Android' },
+]
+
+const screenSizeOptions = [
+  { value: 'Phone', label: '手机' },
+  { value: 'MiniTablet', label: '小平板' },
+  { value: 'Tablet', label: '平板' },
+  { value: 'PC', label: 'PC' },
+]
+
+const packTypeOptions = [
+  { value: 'CLASSIC', label: '经典' },
+  { value: 'GOLDEN_CLASSIC_PACK', label: '黄金经典' },
+  { value: 'STANDARD_PACK', label: '标准' },
+  { value: 'WILD_PACK', label: '狂野' },
+  { value: 'GOLDEN_STANDARD_PACK', label: '黄金标准' },
+  { value: 'WILD_WEST', label: '狂野西部' },
+  { value: 'SPACE', label: '太空' },
+]
+
+const qualityTypeOptions = [
+  { value: 'NORMAL', label: '普通' },
+  { value: 'GOLDEN', label: '金色' },
+  { value: 'DIAMOND', label: '钻石' },
+  { value: 'SIGNATURE', label: '签名' },
+]
+
+const rarityTypeOptions = [
+  { value: 'COMMON', label: '普通' },
+  { value: 'RARE', label: '稀有' },
+  { value: 'EPIC', label: '史诗' },
+  { value: 'LEGENDARY', label: '传说' },
+]
+
+// 设备模拟卡片组件
+const DeviceSimulationCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
+  return (
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">设备模拟</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          （重启炉石后生效）模拟设备以用于卡包和卡背收藏
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pr-8">
+        <SettingSelect
+          label="设备模拟模板"
+          value={config['Device Simulation Template'] || 'Default'}
+          onChange={value => onUpdateConfig('Device Simulation Template', value)}
+          options={deviceTemplateOptions}
+          description="选择要模拟的设备类型"
+          placeholder=""
+        />
+
+        <SettingSelect
+          label="模拟设备系统"
+          value={config['Simulated Device OS'] || 'PC'}
+          onChange={value => onUpdateConfig('Simulated Device OS', value)}
+          options={deviceOSOptions}
+          description="当设备模拟模板设置为自定义时生效"
+          placeholder=""
+        />
+
+        <SettingSelect
+          label="设备屏幕尺寸"
+          value={config['Device Screen Size'] || 'PC'}
+          onChange={value => onUpdateConfig('Device Screen Size', value)}
+          options={screenSizeOptions}
+          description="当设备模拟模板设置为自定义时生效"
+          placeholder=""
+        />
+
+        <SettingInput
+          label="模拟设备型号"
+          type="text"
+          value={config['Device Model'] || 'HsMod'}
+          onChange={value => onUpdateConfig('Device Model', value)}
+          description="当设备模拟模板设置为自定义时生效"
+        />
+      </CardContent>
+    </Card>
+  )
+})
+DeviceSimulationCard.displayName = 'DeviceSimulationCard'
+
+// 卡包模拟卡片组件
+const PackSimulationCard = memo(({ config, onUpdateConfig }: {
+  config: Record<string, any>
+  onUpdateConfig: (key: string, value: any) => void
+}) => {
+  return (
+    <Card className="border-none shadow-none">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-xl font-semibold tracking-tight">卡包模拟</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          卡包开启模拟配置
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="grid gap-6 pr-8">
+
+        <SettingSwitch
+          id="simulate-pack"
+          label="模拟开包"
+          description="启用模拟开包功能（建议修改后重启炉石，启用可能导致开包统计异常）"
+          value={config['Simulate Pack Opening'] === 'true'}
+          onChange={checked => onUpdateConfig('Simulate Pack Opening', String(checked))}
+        />
+
+        <SettingInput
+          label="模拟卡包数量"
+          type="number"
+          value={config.Count || '233'}
+          onChange={value => onUpdateConfig('Count', value)}
+          description="设置模拟的卡包数量"
+        />
+
+        <SettingSelect
+          label="卡包类型"
+          value={config.Type || 'GOLDEN_CLASSIC_PACK'}
+          onChange={value => onUpdateConfig('Type', value)}
+          options={packTypeOptions}
+          description="模拟的卡包类型（替换卡包图标）"
+          placeholder=""
+        />
+
+        <SettingSwitch
+          label="随机结果"
+          value={config['Random Result'] === 'true'}
+          onChange={checked => onUpdateConfig('Random Result', String(checked))}
+          description="启用随机结果"
+          id=""
+        />
+
+        <SettingSwitch
+          label="随机稀有度"
+          value={config['Random Rarity'] === 'true'}
+          onChange={checked => onUpdateConfig('Random Rarity', String(checked))}
+          description="随机化卡牌稀有度（基于随机结果）"
+          id=""
+        />
+
+        <SettingSelect
+          label="指定稀有度"
+          value={config['Rarity Type'] || 'LEGENDARY'}
+          onChange={value => onUpdateConfig('Rarity Type', value)}
+          options={rarityTypeOptions}
+          description="指定随机稀有度（基于随机稀有度）"
+          placeholder=""
+        />
+
+        <SettingSwitch
+          label="随机品质"
+          value={config['Random Quality'] === 'true'}
+          onChange={checked => onUpdateConfig('Random Quality', String(checked))}
+          description="随机化卡牌品质（基于随机结果）"
+          id=""
+        />
+
+        <SettingSelect
+          label="指定品质"
+          value={config['Quality Type'] || 'GOLDEN'}
+          onChange={value => onUpdateConfig('Quality Type', value)}
+          options={qualityTypeOptions}
+          description="指定卡牌品质（基于随机品质）"
+          placeholder=""
+        />
+
+        <SettingSwitch
+          label="随机额外特效"
+          value={config['Random Additional Effects'] === 'true'}
+          onChange={checked => onUpdateConfig('Random Additional Effects', String(checked))}
+          description="在随机品质中包含钻石或签名特效（基于随机品质）"
+          id=""
+        />
+      </CardContent>
+    </Card>
+  )
+})
+PackSimulationCard.displayName = 'PackSimulationCard'
+
+// 主组件
 export function PackSettings() {
+  const { config, loadConfig, checkStatus, isConnected, updateConfig } = useSettings()
+
+  const handleUpdateConfig = useCallback((key: string, value: any) => {
+    updateConfig(key, value)
+  }, [updateConfig])
+
+  useEffect(() => {
+    loadConfig()
+    const checkInterval = setInterval(checkStatus, 30000)
+    return () => clearInterval(checkInterval)
+  }, [loadConfig, checkStatus])
+
+  if (!isConnected)
+    return <div>未连接到 HsMod 服务</div>
+
   return (
     <div className="space-y-6">
-      {/* 开包设置 */}
-      <Card className="border-none shadow-none">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-xl font-semibold tracking-tight">开包设置</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            卡包开启相关配置
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-6 pt-3">
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-0.5">
-              <Label className="text-base" htmlFor="quick-open">快速开包</Label>
-              <p className="text-[13px] text-muted-foreground">
-                跳过开包动画直接显示结果
-              </p>
-            </div>
-            <Switch id="quick-open" />
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-0.5">
-              <Label className="text-base" htmlFor="auto-open">自动开包</Label>
-              <p className="text-[13px] text-muted-foreground">
-                自动开启获得的卡包
-              </p>
-            </div>
-            <Switch id="auto-open" />
-          </div>
-
-          <div className="space-y-2">
-            <div className="space-y-0.5">
-              <Label className="text-base">开包延迟</Label>
-              <p className="text-[13px] text-muted-foreground">
-                设置自动开包的延迟时间（毫秒）
-              </p>
-            </div>
-            <div className="w-[40%]">
-              <Input
-                type="number"
-                min="0"
-                placeholder="请输入延迟时间"
-                className="h-9"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-0.5">
-              <Label className="text-base" htmlFor="skip-animation">跳过动画</Label>
-              <p className="text-[13px] text-muted-foreground">
-                跳过开包过程中的动画效果
-              </p>
-            </div>
-            <Switch id="skip-animation" />
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-0.5">
-              <Label className="text-base" htmlFor="auto-confirm">自动确认</Label>
-              <p className="text-[13px] text-muted-foreground">
-                自动确认开包结果
-              </p>
-            </div>
-            <Switch id="auto-confirm" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* 模拟设置 */}
-      <Card className="border-none shadow-none">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-xl font-semibold tracking-tight">模拟设置</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            卡包模拟相关配置
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-6 pt-3">
-          <div className="space-y-2">
-            <div className="space-y-0.5">
-              <Label className="text-base">模拟开包状态</Label>
-              <p className="text-[13px] text-muted-foreground">
-                设置模拟开包的结果状态
-              </p>
-            </div>
-            <div className="w-[60%]">
-              <Select defaultValue="Default">
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="选择模拟状态" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Default">默认</SelectItem>
-                  <SelectItem value="Success">成功</SelectItem>
-                  <SelectItem value="Failed">失败</SelectItem>
-                  <SelectItem value="Random">随机</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="space-y-0.5">
-              <Label className="text-base">模拟卡包数量</Label>
-              <p className="text-[13px] text-muted-foreground">
-                设置要模拟开启的卡包数量
-              </p>
-            </div>
-            <div className="w-[40%]">
-              <Input
-                type="number"
-                min="1"
-                placeholder="请输入卡包数量"
-                className="h-9"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <div className="space-y-0.5">
-              <Label className="text-base">卡包类型</Label>
-              <p className="text-[13px] text-muted-foreground">
-                选择要模拟开启的卡包类型
-              </p>
-            </div>
-            <div className="w-[60%]">
-              <Select defaultValue="Classic">
-                <SelectTrigger className="h-9">
-                  <SelectValue placeholder="选择卡包类型" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Classic">经典卡包</SelectItem>
-                  <SelectItem value="Latest">最新扩展包</SelectItem>
-                  <SelectItem value="Golden">黄金卡包</SelectItem>
-                  <SelectItem value="Random">随机卡包</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between space-x-2">
-            <div className="space-y-0.5">
-              <Label className="text-base" htmlFor="save-results">保存结果</Label>
-              <p className="text-[13px] text-muted-foreground">
-                保存模拟开包的结果记录
-              </p>
-            </div>
-            <Switch id="save-results" />
-          </div>
-        </CardContent>
-      </Card>
+      <DeviceSimulationCard config={config} onUpdateConfig={handleUpdateConfig} />
+      <PackSimulationCard config={config} onUpdateConfig={handleUpdateConfig} />
     </div>
   )
 }

@@ -11,7 +11,7 @@ import { SkinSettings } from './tabs/SkinSettings'
 export function Settings() {
   return (
     <div className="h-full w-full">
-      <div className="p-6 space-y-6">
+      <div className="p-6 space-y-6 max-w-[1200px]">
         <div className="space-y-0.5">
           <h2 className="text-2xl font-bold tracking-tight">配置管理</h2>
           <p className="text-muted-foreground">管理您的应用程序配置</p>
@@ -19,14 +19,49 @@ export function Settings() {
 
         <Tabs defaultValue="global" className="flex flex-col flex-1">
           <div className="border-b bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <TabsList className="flex w-full h-12 overflow-x-auto space-x-2 p-1">
-              <TabsTrigger value="global" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">基础</TabsTrigger>
-              <TabsTrigger value="development" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">开发</TabsTrigger>
-              <TabsTrigger value="friends" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">好友</TabsTrigger>
-              <TabsTrigger value="hearthstone" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">炉石</TabsTrigger>
-              <TabsTrigger value="optimization" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">优化</TabsTrigger>
-              <TabsTrigger value="pack" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">开包</TabsTrigger>
-              <TabsTrigger value="skin" className="flex-shrink-0 min-w-[120px] px-8 py-3 data-[state=active]:bg-background">皮肤</TabsTrigger>
+            <TabsList className="flex w-full h-12 overflow-x-auto space-x-2 p-1 [&::-webkit-scrollbar]:hidden justify-start">
+              <TabsTrigger
+                value="global"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                基础
+              </TabsTrigger>
+              <TabsTrigger
+                value="development"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                开发
+              </TabsTrigger>
+              <TabsTrigger
+                value="friends"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                好友
+              </TabsTrigger>
+              <TabsTrigger
+                value="hearthstone"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                炉石
+              </TabsTrigger>
+              <TabsTrigger
+                value="optimization"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                优化
+              </TabsTrigger>
+              <TabsTrigger
+                value="pack"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                开包
+              </TabsTrigger>
+              <TabsTrigger
+                value="skin"
+                className="flex-shrink-0 px-8 py-3 data-[state=active]:bg-background"
+              >
+                皮肤
+              </TabsTrigger>
             </TabsList>
           </div>
 
