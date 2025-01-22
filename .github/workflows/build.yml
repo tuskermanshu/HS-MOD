@@ -1,18 +1,12 @@
 name: Build
 
 on:
+  # 推送到 main 分支时触发
   push:
-    branches: [main]
-    paths-ignore:
-      - "**.md"
-      - "**.spec.js"
-      - ".idea"
-      - ".vscode"
-      - ".dockerignore"
-      - "Dockerfile"
-      - ".gitignore"
-      - ".github/**"
-      - "!.github/workflows/build.yml"
+    branches: 
+      - main
+  # 也可以添加手动触发选项
+  workflow_dispatch:
 
 jobs:
   build:
