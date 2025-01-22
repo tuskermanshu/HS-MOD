@@ -32,6 +32,12 @@ jobs:
         with:
           node-version: 18
 
+      - name: Get Package Version
+        id: package-version
+        shell: bash
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
       - name: Install Dependencies
         run: npm install
 
@@ -40,17 +46,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get Package Version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@v1.3.1
-
       - name: Upload Artifacts to Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            release/${{ steps.package-version.outputs.current-version }}/*.exe
-            release/${{ steps.package-version.outputs.current-version }}/*.dmg
+            release/${{ steps.package-version.outputs.version }}/*.exe
+            release/${{ steps.package-version.outputs.version }}/*.dmg
           draft: false
           prerelease: false
         env:
@@ -60,5 +62,5 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: release_on_${{ matrix.os }}
-          path: release/${{ steps.package-version.outputs.current-version }}
+          path: release/${{ steps.package-version.outputs.version }}
           retention-days: 5
