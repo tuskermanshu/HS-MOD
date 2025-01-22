@@ -1,7 +1,7 @@
 {
   "name": "HsMod",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "description": "Electron Vite React boilerplate.",
   "author": "Tsukermanshu <tuskermanshu@yeah.net>",
