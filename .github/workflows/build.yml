@@ -20,7 +20,12 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [macos-latest, windows-latest]
+        include:
+          - os: macos-latest
+            build_command: build:mac
+          - os: windows-latest
+            build_command: build:win
 
     steps:
       - name: Checkout Code
@@ -35,13 +40,13 @@ jobs:
         run: npm install
 
       - name: Build Release Files
-        run: npm run build
+        run: npm run ${{ matrix.build_command }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: release_on_${{ matrix. os }}
-          path: release/
+          name: release_on_${{ matrix.os }}
+          path: release/${version}
           retention-days: 5

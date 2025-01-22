@@ -20,20 +20,7 @@ export function HelpDialog({ open, onOpenChange }: HelpDialogProps) {
           </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="install" className="mt-4">
-          <TabsList className="w-full justify-start">
-            <TabsTrigger value="install" className="px-3 py-1.5">安装指南</TabsTrigger>
-            <TabsTrigger value="usage" className="px-3 py-1.5">使用说明</TabsTrigger>
-          </TabsList>
-          <TabsContent value="install" className="mt-4">
-            <InstallGuide />
-          </TabsContent>
-          <TabsContent value="usage">
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">使用说明待补充...</p>
-            </div>
-          </TabsContent>
-        </Tabs>
+        <InstallGuide />
       </DialogContent>
     </Dialog>
   )
@@ -51,16 +38,27 @@ function InstallGuide() {
         <TabsContent value="windows" className="space-y-4 max-w-[600px]">
           <div className="space-y-4">
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">1. 准备工作</h3>
+              <h3 className="text-lg font-semibold">1. 安装 BepInEx</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
-                <li>编译 HsMod 或从 Releases 下载 HsMod.dll</li>
+                <li>
+                  从
+                  <a href="https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_linux_x64_5.4.23.2.zip" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">BepInEx Releases</a>
+                  {' '}
+                  下载 BepInEx_x86_5.4.23.2.zip 并解压到炉石传说根目录 (Hearthstone\)
+                </li>
               </ul>
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>注意</AlertTitle>
+                <AlertDescription>
+                  请下载 5.4.23.2 版本，不要下载 6.0.0 预览版，因为 6.0.0 版本与现有插件不兼容
+                </AlertDescription>
+              </Alert>
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">2. 配置 BepInEx</h3>
+              <h3 className="text-lg font-semibold">2. 配置依赖库</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
-                <li>下载 BepInEx_x86 并解压到炉石传说根目录 (Hearthstone\)</li>
                 <li>创建目录 Hearthstone\BepInEx\unstripped_corlib\</li>
                 <li>将项目目录 HsMod/UnstrippedCorlib 下的所有 dll 复制到 unstripped_corlib 目录</li>
                 <li>修改 Hearthstone\doorstop_config.ini，将 dllSearchPathOverride= 替换为 dllSearchPathOverride=BepInEx\unstripped_corlib</li>
@@ -77,20 +75,10 @@ function InstallGuide() {
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">3. 安装 HsMod</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>编译 HsMod 或从 Releases 下载 HsMod.dll</li>
                 <li>将 HsMod.dll 存放在 Hearthstone\BepInEx\plugins 目录下</li>
               </ul>
             </div>
-
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertTitle>Windows 所需文件说明</AlertTitle>
-              <AlertDescription className="space-y-2">
-                <p>Unity 和 Mono 文件从 Unity Editor 提取：</p>
-                <ul className="list-disc list-inside space-y-1">
-
-                </ul>
-              </AlertDescription>
-            </Alert>
           </div>
         </TabsContent>
 
@@ -99,31 +87,37 @@ function InstallGuide() {
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">1. 安装 BepInEx</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
-                <li>下载最新版本的 BepInEx_macos_x64 (BepInEx 5) 并解压到 Hearthstone/ 目录</li>
+                <li>
+                  从
+                  <a href="https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_macos_x64_5.4.23.2.zip" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">BepInEx Releases</a>
+                  {' '}
+                  下载 BepInEx_macos_x64_5.4.23.2.zip 并解压到炉石传说根目录 (Hearthstone\)
+                </li>
               </ul>
+              <Alert>
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>注意</AlertTitle>
+                <AlertDescription>
+                  请下载 5.4.23.2 版本，不要下载 6.0.0 预览版，因为 6.0.0 版本与现有插件不兼容
+                </AlertDescription>
+              </Alert>
             </div>
 
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">2. 配置依赖库</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
                 <li>下载原始的 Mono 和 Unity 库并解压到 Hearthstone/BepInEx/unstripped_corlib</li>
-              </ul>
-              <Alert>
-                <AlertCircle className="h-4 w-4" />
-                <AlertTitle>注意</AlertTitle>
-                <AlertDescription>
-                  Mono 和 Unity 版本必须与炉石传说相同
-                </AlertDescription>
-              </Alert>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">3. 配置启动脚本</h3>
-              <ul className="list-disc list-inside space-y-1 text-sm">
                 <li>编辑 run_bepinex.sh 文件：</li>
                 <li className="ml-4">将 dll_search_path_override="" 替换为 dll_search_path_override="BepInEx/unstripped_corlib"</li>
                 <li className="ml-4">将 executable_name="" 替换为 executable_name="Hearthstone.app"</li>
                 <li>运行命令：chmod u+x run_bepinex.sh</li>
+              </ul>
+            </div>
+
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold">3. 安装 HsMod</h3>
+              <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>下载 HsMod Releases 并解压到 Hearthstone/BepInEx/plugins</li>
               </ul>
             </div>
 
@@ -135,11 +129,11 @@ function InstallGuide() {
               <div className="mt-2 space-y-1 text-sm">
                 <p className="font-medium">登录地址：</p>
                 <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                  <li>https://account.battlenet.com.cn/login/zh-cn/?app=wtcg</li>
-                  <li>https://us.battle.net/login/en/?app=wtcg</li>
-                  <li>https://tw.battle.net/login/zh/?app=wtcg</li>
-                  <li>https://kr.battle.net/login/zh/?app=wtcg</li>
-                  <li>https://eu.battle.net/login/zh/?app=wtcg</li>
+                  <li><a href="https://account.battlenet.com.cn/login/zh-cn/?app=wtcg" target="_blank" rel="noopener noreferrer" className="hover:underline">国服 - https://account.battlenet.com.cn/login/zh-cn/?app=wtcg</a></li>
+                  <li><a href="https://us.battle.net/login/en/?app=wtcg" target="_blank" rel="noopener noreferrer" className="hover:underline">美服 - https://us.battle.net/login/en/?app=wtcg</a></li>
+                  <li><a href="https://tw.battle.net/login/zh/?app=wtcg" target="_blank" rel="noopener noreferrer" className="hover:underline">台服 - https://tw.battle.net/login/zh/?app=wtcg</a></li>
+                  <li><a href="https://kr.battle.net/login/zh/?app=wtcg" target="_blank" rel="noopener noreferrer" className="hover:underline">韩服 - https://kr.battle.net/login/zh/?app=wtcg</a></li>
+                  <li><a href="https://eu.battle.net/login/zh/?app=wtcg" target="_blank" rel="noopener noreferrer" className="hover:underline">欧服 - https://eu.battle.net/login/zh/?app=wtcg</a></li>
                 </ul>
               </div>
             </div>
@@ -162,14 +156,7 @@ Env = us.actual.battle.net`}
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">6. 安装 HsMod</h3>
-              <ul className="list-disc list-inside space-y-1 text-sm">
-                <li>下载 HsMod Releases 并解压到 Hearthstone/BepInEx/plugins</li>
-              </ul>
-            </div>
-
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold">7. 启动游戏</h3>
+              <h3 className="text-lg font-semibold">6. 启动游戏</h3>
               <ul className="list-disc list-inside space-y-1 text-sm">
                 <li>使用以下命令启动：</li>
                 <li className="ml-4">带 Token：./run_bepinex.sh TOKEN</li>
