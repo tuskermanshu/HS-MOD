@@ -1,7 +1,7 @@
 {
   "name": "HsMod",
   "type": "module",
-  "version": "2.2.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Electron Vite React boilerplate.",
   "author": "Tsukermanshu <tuskermanshu@yeah.net>",
@@ -69,7 +69,7 @@
   },
   "build": {
     "appId": "YourAppID",
-    "productName": "Your App Name",
+    "productName": "HSMod",
     "directories": {
       "output": "release/${version}"
     },
