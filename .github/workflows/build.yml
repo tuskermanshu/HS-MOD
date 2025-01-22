@@ -71,13 +71,14 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          name: "Release ${{ github.ref_name }}"
-          body: "Release version ${{ github.ref_name }}"
+          tag_name: app-v${{ steps.package-version.outputs.version }}
+          name: "App v${{ steps.package-version.outputs.version }}"
+          body: |
+            Changes in this Release:
+            - First release for testing
           draft: true
           prerelease: false
-          files: |
-            release/${{ steps.package-version.outputs.version }}/${{ matrix.artifact_name }}
+          files: release/${{ steps.package-version.outputs.version }}/${{ matrix.artifact_name }}
 
       - name: Upload Artifact for Debug
         uses: actions/upload-artifact@v3
