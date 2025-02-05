@@ -11,10 +11,10 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2  # 使用官方 v2 版本的 checkout
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2  # 使用官方 v2 版本的 Node.js 设置
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
 
@@ -28,10 +28,10 @@ jobs:
         run: ls -R release/
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1  # 使用自己的版本或官方版本
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_TOKEN: ${{ secrets.MS_MOD }}  # 确保使用 GitHub Token
+          GITHUB_TOKEN: ${{ secrets.MS_MOD }}  # 修改为使用 MS_MOD secret
         with:
           tag_name: ${{ github.ref }}
           name: "Release ${{ github.ref }}"
@@ -43,7 +43,7 @@ jobs:
           files: release/${{ github.ref }}/HSMod-Mac-${{ github.ref }}-Installer.dmg, release/${{ github.ref }}/HSMod-Windows-${{ github.ref }}-Setup.exe
 
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v2  # 使用官方 v2 版本的上传 artifact
+        uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ./dist  # 根据构建输出目录调整
@@ -53,10 +53,10 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2  # 使用官方 v2 版本的 checkout
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v2  # 使用官方 v2 版本的 Node.js 设置
+        uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
 
@@ -70,10 +70,10 @@ jobs:
         run: ls -R release/
 
       - name: Create Release for macOS
-        uses: softprops/action-gh-release@v1  # 使用自己的版本或官方版本
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_TOKEN: ${{ secrets.MS_MOD }}  # 确保使用 GitHub Token
+          GITHUB_TOKEN: ${{ secrets.MS_MOD }}  # 修改为使用 MS_MOD secret
         with:
           tag_name: ${{ github.ref }}
           name: "Release macOS ${{ github.ref }}"
