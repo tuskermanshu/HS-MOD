@@ -97,9 +97,15 @@
     ],
     "mac": {
       "target": [
-        "dir"
+        {
+          "target": "zip",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
       ],
-      "artifactName": "${productName}-Mac-${version}.app"
+      "artifactName": "${productName}-Mac-${version}.zip"
     },
     "win": {
       "target": [
