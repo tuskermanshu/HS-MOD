@@ -7,43 +7,79 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  # 默认使用 Linux 构建
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3  # 检出代码
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'  # 设置 Node.js 版本
+          node-version: 'lts/*'
 
       - name: Install Dependencies
-        run: npm install  # 安装依赖
+        run: npm install  # 安装所有依赖
 
       - name: Build Application
-        run: npm run build:all  # 执行构建脚本，打包应用
+        run: npm run build  # 执行构建脚本，打包应用
 
       - name: List Release Directory
-        run: ls -R release/  # 列出构建目录，确认产物生成
+        run: ls -R release/
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1  # 将构建产物上传到 GitHub Releases
+        uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}  # 使用当前标签作为版本号
-          name: "Release ${{ github.ref }}"  # Release 名称
+          tag_name: ${{ github.ref }}
+          name: "Release ${{ github.ref }}"
           body: |
             Changes in this Release:
             - First release for testing
-          draft: false  # 将 Release 发布，而非草稿
-          prerelease: false  # 正式版本
-          files: release/${{ github.ref }}/HSMod-Mac-${{ github.ref }}-Installer.dmg, release/${{ github.ref }}/HSMod-Windows-${{ github.ref }}-Setup.exe  # 上传构建产物
+          draft: false
+          prerelease: false
+          files: release/${{ github.ref }}/HSMod-Mac-${{ github.ref }}-Installer.dmg, release/${{ github.ref }}/HSMod-Windows-${{ github.ref }}-Setup.exe
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: ./dist  # 根据构建输出目录调整
+          path: ./dist
+          
+  macos_build:
+    runs-on: macos-latest  # 在 macOS 上执行构建任务
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Install Dependencies
+        run: npm install  # 安装所有依赖
+
+      - name: Build macOS Application
+        run: npm run build:mac  # 只在 macOS 上构建
+
+      - name: List Release Directory
+        run: ls -R release/
+
+      - name: Create Release for macOS
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          name: "Release macOS ${{ github.ref }}"
+          body: |
+            Changes in this Release:
+            - First release for macOS
+          draft: false
+          prerelease: false
+          files: release/${{ github.ref }}/HSMod-Mac-${{ github.ref }}-Installer.dmg
