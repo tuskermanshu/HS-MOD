@@ -9,6 +9,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]  # 定义操作系统 matrix
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -26,7 +30,7 @@ jobs:
         run: npm install
 
       - name: Build Release Files
-        run: npm run build  # 请确保你有一个 build 脚本来打包应用
+        run: npm run build:${{ matrix.os }}  # 根据操作系统执行不同的构建命令
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -41,4 +45,4 @@ jobs:
             - First release for testing
           draft: true
           prerelease: false
-          files: release/${{ env.version }}/HSMod-Mac-${{ env.version }}-Installer.dmg  # 请确保这路径和你的构建产物一致
+          files: release/${{ env.version }}/HSMod-${{ matrix.os }}-${{ env.version }}-Installer.${{ matrix.os == 'macos-latest' && 'dmg' || 'exe' }}  # 动态生成文件路径
