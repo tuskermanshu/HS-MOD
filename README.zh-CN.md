@@ -1,91 +1,79 @@
-# vite-react-electron
-
-[![awesome-vite](https://awesome.re/mentioned-badge.svg)](https://github.com/vitejs/awesome-vite)
-![GitHub stars](https://img.shields.io/github/stars/caoxiemeihao/vite-react-electron?color=fa6470)
-![GitHub issues](https://img.shields.io/github/issues/caoxiemeihao/vite-react-electron?color=d8b22d)
-![GitHub license](https://img.shields.io/github/license/caoxiemeihao/vite-react-electron)
-[![Required Node.JS >= 14.18.0 || >=16.0.0](https://img.shields.io/static/v1?label=node&message=14.18.0%20||%20%3E=16.0.0&logo=node.js&color=3f893e)](https://nodejs.org/about/releases)
+# HSMod v0.0.2
 
 [English](README.md) | 简体中文
 
-## 概述
+> 本项目基于 [Pik-4/HsMod](https://github.com/Pik-4/HsMod) 开发，在此特别感谢原作者的贡献。
 
-📦 开箱即用  
-🎯 基于官方的 [template-react-ts](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts), 低侵入性  
-🌱 结构清晰，可塑性强  
-💪 支持在渲染进程中使用 Electron、Node.js API  
-🔩 支持 C/C++ 模块  
-🖥 很容易实现多窗口  
+### 📦 下载说明
+- Windows: 便携版 (无需安装，下载后直接运行)
+- macOS: 压缩包 (解压后即可使用)
 
-## 快速开始
+### ✨ 主要功能
 
-```sh
-# clone the project
-git clone https://github.com/electron-vite/electron-vite-react.git
+#### 游戏速度与性能
+- 支持齿轮快速和慢速8倍速度（设置允许扩展到快速和慢速32倍）
+- 允许显示游戏帧率信息
+- 允许修改游戏帧率
+- 支持快速对战（跳过部分动画，比齿轮更丝滑）
 
-# enter the project directory
-cd electron-vite-react
+#### 登录与启动
+- 允许使用VerifyWebCredentials登录（支持命令行启动，无需启动战网）
+- 支持屏蔽反作弊
+- 阻止错误报告，异常发生时不向暴雪报告
 
-# install dependency
-npm install
+#### 界面优化
+- 移除窗口大小调整限制
+- 允许移除窗口焦点
+- 阻止弹窗提示（如无法匹配等）
+- 移除中文提示
+- 支持移除削弱补丁、广告、天梯结算奖励等提示
+- 允许屏蔽对战令、成就等奖励提示
 
-# develop
-npm run dev
-```
+#### 卡牌与收藏功能
+- 允许快速开包，空格一次开5包
+- 开包时允许自动分解已满分解的卡牌
+- 支持在收藏、英雄、卡背、打击特效、酒馆面板等处右键选中卡牌时显示Dbid
+- 支持在收藏夹显示9+实际卡牌数量
+- 支持一键自动分解已满分解的套牌
 
-## 调试
+#### 对战功能
+- 允许0-0时放弃决斗（无套牌）
+- 允许自动收取竞技场、决斗等奖励
+- 支持自动轮换套牌，好友观战时自动观看双方
+- 支持炉边聚会模拟定位
+- 支持无冷却表情（表情最小间隔1.5秒）
+- 支持表情快捷键
+- 支持炉石自动金卡和钻石卡
 
-![electron-vite-react-debug.gif](/electron-vite-react-debug.gif)
+#### 对手互动
+- 允许单独屏蔽对手卡牌特效
+- 允许显示对手完整战网昵称
+- 允许点击头像获取酒馆玩家昵称
+- 允许在匹配中添加对手
+- 允许在对战前显示对手天梯等级
+- 支持标记对手已知卡牌
 
-## 目录
+#### 其他功能
+- 支持快捷键静音炉石
+- 支持自动举报对手
+- 支持模拟拔线功能
+- 支持修改对战英雄皮肤、酒馆英雄皮肤等信息
+- 支持修改卡背
+- 支持佣兵随机皮肤、强制钻石皮肤等
+- 支持模拟开包
+- 支持设备模拟
+- 支持金币购买冒险模式
 
-*🚨 默认情况下, `electron` 文件夹下的文件将会被构建到 `dist-electron`*
+### 💻 系统要求
+- Windows: 64位 Windows 10 或更高版本
+- macOS: macOS 10.15 或更高版本 (支持 Intel 和 Apple Silicon)
 
-```tree
-├── electron                                 Electron 源码文件夹
-│   ├── main                                 Main-process 源码
-│   └── preload                              Preload-scripts 源码
-│
-├── release                                  构建后生成程序目录
-│   └── {version}
-│       ├── {os}-{os_arch}                   未打包的程序(绿色运行版)
-│       └── {app_name}_{version}.{ext}       应用安装文件
-│
-├── public                                   同 Vite 模板的 public
-└── src                                      渲染进程源码、React代码
-```
+### 📝 注意事项
+- 首次使用请确保已安装炉石传说
+- 使用前请先备份游戏文件
+- 如遇问题请在 Issues 中反馈
+- 本工具仅供学习交流使用，请勿用于其他用途
+- 使用本工具可能违反暴雪用户协议，请自行承担风险
 
-<!--
-## 🚨 这需要留神
-
-默认情况下，该模板在渲染进程中集成了 Node.js，如果你不需要它，你只需要删除下面的选项. [因为它会修改 Vite 默认的配置](https://github.com/electron-vite/vite-plugin-electron-renderer#config-presets-opinionated).
-
-```diff
-# vite.config.ts
-
-export default {
-  plugins: [
-    ...
--   // Use Node.js API in the Renderer-process
--   renderer({
--     nodeIntegration: true,
--   }),
-    ...
-  ],
-}
-```
--->
-
-## 🔧 额外的功能
-
-1. Electron 自动更新 👉 [阅读文档](src/components/update/README.zh-CN.md)
-2. Playwright 测试
-
-## ❔ FAQ
-
-- [C/C++ addons, Node.js modules - Pre-Bundling](https://github.com/electron-vite/vite-plugin-electron-renderer#dependency-pre-bundling)
-- [dependencies vs devDependencies](https://github.com/electron-vite/vite-plugin-electron-renderer#dependencies-vs-devdependencies)
-
-## 🍵 🍰 🍣 🍟
-
-<img width="270" src="https://github.com/caoxiemeihao/blog/blob/main/assets/$qrcode/$.png?raw=true">
+---
+*本项目是 [Pik-4/HsMod](https://github.com/Pik-4/HsMod) 的二次开发版本，遵循原项目的 AGPL-3.0 许可证。*
