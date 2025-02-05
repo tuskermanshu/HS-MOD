@@ -11,8 +11,10 @@ jobs:
       matrix:
         include:
           - os: macos-latest
+            build_command: build:mac
             artifact_name: "HSMod-Mac-*.dmg"
           - os: windows-latest
+            build_command: build:win
             artifact_name: "HSMod-Windows-*.exe"
     
     runs-on: ${{ matrix.os }}
@@ -32,7 +34,7 @@ jobs:
         run: npm install  # 改用 npm install 而不是 npm ci
 
       - name: Build Application
-        run: npm run build
+        run: npm run ${{ matrix.build_command }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
