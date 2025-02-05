@@ -12,7 +12,7 @@ jobs:
         include:
           - os: macos-latest
             build_command: build:mac
-            artifact_name: "HSMod-Mac-*.dmg"
+            artifact_name: "HSMod-Mac-*.app"
           - os: windows-latest
             build_command: build:win
             artifact_name: "HSMod-Windows-*.exe"
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 获取完整的 git 历史
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -31,7 +31,7 @@ jobs:
           node-version: 'lts/*'
 
       - name: Install Dependencies
-        run: npm install  # 改用 npm install 而不是 npm ci
+        run: npm install
 
       - name: Build Application
         run: npm run ${{ matrix.build_command }}
@@ -39,7 +39,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List Build Output
-        run: ls -R release/
+        run: |
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            dir release /s
+          else
+            ls -R release/
+          fi
         shell: bash
 
       - name: Create Release
