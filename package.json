@@ -36,7 +36,6 @@
     "ajv": "^8.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "dmg-license": "^1.0.11",
     "electron-store": "^10.0.0",
     "electron-updater": "^6.3.9",
     "js-yaml": "^4.1.0",
@@ -45,6 +44,9 @@
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^5.0.3"
+  },
+  "optionalDependencies": {
+    "dmg-license": "1.0.11"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.14.0",
@@ -69,6 +71,7 @@
     "vite-plugin-electron-renderer": "^0.14.6",
     "vitest": "^2.1.5"
   },
+
   "build": {
     "appId": "YourAppID",
     "productName": "HSMod",
