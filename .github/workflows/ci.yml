@@ -31,7 +31,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MS_MOD }}  # 修改为使用 MS_MOD secret
         with:
           tag_name: ${{ github.ref }}
           name: "Release ${{ github.ref }}"
@@ -46,8 +46,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: ./dist
-          
+          path: ./dist  # 根据构建输出目录调整
+
   macos_build:
     runs-on: macos-latest  # 在 macOS 上执行构建任务
 
@@ -73,7 +73,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MS_MOD }}  # 修改为使用 MS_MOD secret
         with:
           tag_name: ${{ github.ref }}
           name: "Release macOS ${{ github.ref }}"
