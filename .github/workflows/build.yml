@@ -12,7 +12,7 @@ jobs:
         include:
           - os: macos-latest
             build_command: build:mac
-            artifact_name: "HSMod-Mac-*.app"
+            artifact_name: "HSMod-Mac-*.zip"
           - os: windows-latest
             build_command: build:win
             artifact_name: "HSMod-Windows-*.exe"
@@ -39,13 +39,13 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: List Build Output
+        shell: bash
         run: |
-          if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            dir release /s
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+            cmd "/c dir /s /b release"
           else
             ls -R release/
           fi
-        shell: bash
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
