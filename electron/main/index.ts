@@ -32,7 +32,7 @@ if (!app.requestSingleInstanceLock()) {
 }
 
 let win: BrowserWindow | null = null
-const preload = path.join(__dirname, '../preload/index.mjs')
+const preload = path.join(__dirname, '../preload/index.cjs')
 const indexHtml = path.join(RENDERER_DIST, 'index.html')
 
 async function createWindow() {
@@ -47,6 +47,7 @@ async function createWindow() {
       preload,
       nodeIntegration: false,
       contextIsolation: true,
+      devTools: process.env.NODE_ENV === 'development',
     },
   })
 
@@ -54,10 +55,11 @@ async function createWindow() {
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
+    // 只在开发环境打开开发者工具
     win.webContents.openDevTools()
   }
   else {
-    win.loadFile(indexHtml)
+    win.loadFile(indexHtml, { hash: '/' })
   }
 
   win.webContents.on('did-finish-load', () => {
@@ -72,9 +74,9 @@ async function createWindow() {
     win?.webContents.send('system-type', systemType)
   })
 
-  win.webContents.setWindowOpenHandler(({ url }) => {
-    if (url.startsWith('https:'))
-      shell.openExternal(url)
+  win.webContents.setWindowOpenHandler((details: { url: string }) => {
+    if (details.url.startsWith('https:'))
+      shell.openExternal(details.url)
     return { action: 'deny' }
   })
 

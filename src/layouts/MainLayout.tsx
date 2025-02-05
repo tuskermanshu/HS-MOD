@@ -1,3 +1,4 @@
+import { ProcessStatusCheck } from '@/components/ProcessStatusCheck'
 import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,9 +9,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet'
+import { useSystemType } from '@/hooks/useSystemType'
+import { cn } from '@/lib/utils'
 import { HelpDialog } from '@/pages/guide'
 import { Menu } from 'lucide-react'
 import { useEffect, useState } from 'react'
+import { Outlet } from 'react-router-dom'
 
 interface MainLayoutProps {
   children: React.ReactNode
@@ -20,6 +24,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   const [open, setOpen] = useState(false)
   const [showSidebar, setShowSidebar] = useState(false)
   const [showHelp, setShowHelp] = useState(false)
+  const { systemType } = useSystemType()
 
   useEffect(() => {
     // 监听窗口大小变化
@@ -36,6 +41,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
   return (
     <div className="flex h-full">
+      <ProcessStatusCheck />
       {/* 移动端/平板侧边栏 */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>

@@ -33,6 +33,7 @@
     "@radix-ui/react-switch": "^1.1.2",
     "@radix-ui/react-tabs": "^1.1.2",
     "@types/react-router-dom": "^5.3.3",
+    "ajv": "^8.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "electron-store": "^10.0.0",
@@ -70,12 +71,21 @@
   "build": {
     "appId": "YourAppID",
     "productName": "HSMod",
+    "asar": true,
+    "asarUnpack": ["**/*.{node,dll}"],
     "directories": {
       "output": "release/${version}"
     },
     "files": [
       "dist",
       "dist-electron"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/",
+        "to": "node_modules",
+        "filter": ["**/*"]
+      }
     ],
     "mac": {
       "target": [
