@@ -36,6 +36,7 @@
     "ajv": "^8.12.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dmg-license": "^1.0.11",
     "electron-store": "^10.0.0",
     "electron-updater": "^6.3.9",
     "js-yaml": "^4.1.0",
@@ -72,7 +73,9 @@
     "appId": "YourAppID",
     "productName": "HSMod",
     "asar": true,
-    "asarUnpack": ["**/*.{node,dll}"],
+    "asarUnpack": [
+      "**/*.{node,dll}"
+    ],
     "directories": {
       "output": "release/${version}"
     },
@@ -84,7 +87,9 @@
       {
         "from": "node_modules/",
         "to": "node_modules",
-        "filter": ["**/*"]
+        "filter": [
+          "**/*"
+        ]
       }
     ],
     "mac": {
