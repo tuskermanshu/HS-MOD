@@ -22,7 +22,7 @@ jobs:
         run: npm install  # 安装依赖
 
       - name: Build Application
-        run: npm run build  # 执行构建脚本，打包应用
+        run: npm run build:all  # 执行构建脚本，打包应用
 
       - name: List Release Directory
         run: ls -R release/  # 列出构建目录，确认产物生成
