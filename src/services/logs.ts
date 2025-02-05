@@ -23,4 +23,9 @@ export const logsService = {
   async getMercenariesLog() {
     return window.electron.ipcRenderer.invoke('logs:getMercenaries')
   },
+
+  // 获取进程和登录状态
+  async getProcessStatus() {
+    return window.electron.ipcRenderer.invoke('logs:getProcessStatus')
+  },
 }

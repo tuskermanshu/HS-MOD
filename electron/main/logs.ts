@@ -67,4 +67,23 @@ export function setupLogsHandlers() {
       throw error instanceof Error ? error : new Error('获取佣兵信息失败')
     }
   })
+
+  // 获取进程和登录状态
+  ipcMain.handle('logs:getProcessStatus', async () => {
+    try {
+      const response = await fetch(`${config.apiUrl}/alive`)
+      if (!response.ok)
+        throw new Error('获取状态失败')
+
+      const data = await response.json()
+      return {
+        pid: data.pid,
+        login: data.login === 'True',
+      }
+    }
+    catch (error) {
+      console.error('Failed to fetch process status:', error)
+      throw error instanceof Error ? error : new Error('获取状态失败')
+    }
+  })
 }
