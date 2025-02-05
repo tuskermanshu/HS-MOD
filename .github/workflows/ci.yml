@@ -1,108 +1,35 @@
-name: CI
+name: Build
 
 on:
-  pull_request_target:
-    branches:
-      - main
-
-permissions:
-  pull-requests: write
+  push:
+    tags:
+      - '*'  # 每次推送标签时触发
 
 jobs:
-  job1:
-    name: Check Not Allowed File Changes
+  build:
     runs-on: ubuntu-latest
-    outputs:
-      markdown_change: ${{ steps.filter_markdown.outputs.change }}
-      markdown_files: ${{ steps.filter_markdown.outputs.change_files }}
-    steps:
 
-      - name: Check Not Allowed File Changes
-        uses: dorny/paths-filter@v2
-        id: filter_not_allowed
-        with:
-          list-files: json
-          filters: |
-            change:
-              - 'package-lock.json'
-              - 'yarn.lock'
-              - 'pnpm-lock.yaml'
-
-      - name: Comment About Changes We Can't Accept
-        if: ${{ steps.filter_not_allowed.outputs.change == 'true' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            let workflowFailMessage = "It looks like you've modified some files that we can't accept as contributions."
-            try {
-              const badFilesArr = [
-                'package-lock.json',
-                'yarn.lock',
-                'pnpm-lock.yaml',
-              ]
-              const badFiles = badFilesArr.join('\n- ')
-              const reviewMessage = `👋 Hey there spelunker. It looks like you've modified some files that we can't accept as contributions. The complete list of files we can't accept are:\n- ${badFiles}\n\nYou'll need to revert all of the files you changed in that list using [GitHub Desktop](https://docs.github.com/en/free-pro-team@latest/desktop/contributing-and-collaborating-using-github-desktop/managing-commits/reverting-a-commit) or \`git checkout origin/main <file name>\`. Once you get those files reverted, we can continue with the review process. :octocat:\n\nMore discussion:\n- https://github.com/electron-vite/electron-vite-vue/issues/192`
-              createdComment = await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: context.payload.number,
-                body: reviewMessage,
-              })
-              workflowFailMessage = `${workflowFailMessage} Please see ${createdComment.data.html_url} for details.`
-            } catch(err) {
-              console.log("Error creating comment.", err)
-            }
-            core.setFailed(workflowFailMessage)
-
-      - name: Check Not Linted Markdown
-        if: ${{ always() }}
-        uses: dorny/paths-filter@v2
-        id: filter_markdown
-        with:
-          list-files: shell
-          filters: |
-            change:
-              - added|modified: '*.md'
-
-
-  job2:
-    name: Lint Markdown
-    runs-on: ubuntu-latest
-    needs: job1
-    if: ${{ always() && needs.job1.outputs.markdown_change == 'true' }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
+        uses: actions/checkout@v4  # 检出代码
 
-      - name: Lint markdown
-        run: npx markdownlint-cli ${{ needs.job1.outputs.markdown_files }} --ignore node_modules
-
-
-  job3:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: job2  # Build only if job2 has passed
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: 'lts/*'  # 设置 Node.js 版本
 
       - name: Install Dependencies
-        run: npm install
+        run: npm install  # 安装依赖
 
       - name: Build Application
-        run: npm run build  # Ensure you have this script in your package.json
+        run: npm run build:all  # 执行 build 脚本
 
-      - name: Upload Build Artifact
-        uses: actions/upload-artifact@v4
+      - name: List Release Directory
+        run: ls -R release/  # 列出构建目录，确认产物生成
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1  # 上传构建产物到 GitHub Releases
         with:
-          name: build-artifacts
-          path: ./dist  # Adjust according to your build output directory
+          tag_name: v${{ env.version }}
+          name: "Release v${{ env.version }}"
+          files: release/${{ env.version }}/HSMod-Mac-${{ env.version }}-Installer.dmg, release/${{ env.version }}/HSMod-Windows-${{ env.version }}-Setup.exe
