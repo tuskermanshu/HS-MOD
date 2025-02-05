@@ -3,10 +3,10 @@ name: CI
 on:
   pull_request_target:
     branches:
-      - main
+      - main  # 触发的目标分支
 
 permissions:
-  pull-requests: write
+  pull-requests: write  # 确保有权限发表评论等
 
 jobs:
   job1:
@@ -16,6 +16,7 @@ jobs:
       markdown_change: ${{ steps.filter_markdown.outputs.change }}
       markdown_files: ${{ steps.filter_markdown.outputs.change_files }}
     steps:
+      # 检查是否有不允许的文件（如 package-lock.json 等）
       - name: Check Not Allowed File Changes
         uses: dorny/paths-filter@v2
         id: filter_not_allowed
@@ -53,6 +54,7 @@ jobs:
             }
             core.setFailed(workflowFailMessage)
 
+      # 检查 Markdown 文件是否有修改
       - name: Check Not Linted Markdown
         if: ${{ always() }}
         uses: dorny/paths-filter@v2
@@ -61,7 +63,7 @@ jobs:
           list-files: shell
           filters: |
             change:
-              - added|modified: '*.md'
+              - added|modified: '*.md'  # 检查是否有 Markdown 文件的修改或新增
 
   job2:
     name: Lint Markdown
@@ -78,10 +80,10 @@ jobs:
         run: npx markdownlint-cli ${{ needs.job1.outputs.markdown_files }} --ignore node_modules
 
   job3:
-    name: Build
+    name: Build Application
     runs-on: ubuntu-latest
     needs: job2
-    if: ${{ always() && needs.job2.result == 'success' }}
+    if: ${{ always() && needs.job2.result == 'success' }}  # Build only if lint passed
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -97,10 +99,28 @@ jobs:
         run: npm install
 
       - name: Build Application
-        run: npm run build  # Ensure you have this script in your package.json
+        run: npm run build  # 确保你在 package.json 中有定义 build 脚本
+
+      - name: List Release Directory
+        run: ls -R release/  # 检查构建产物是否生成
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.version }}
+          name: "Release v${{ env.version }}"
+          body: |
+            Changes in this Release:
+            - First release for testing
+          draft: true
+          prerelease: false
+          files: release/${{ env.version }}/HSMod-Mac-${{ env.version }}-Installer.dmg, release/${{ env.version }}/HSMod-Windows-${{ env.version }}-Setup.exe
 
       - name: Upload Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
-          path: ./dist  # Adjust according to your build output directory
+          path: ./dist  # 根据构建输出目录调整
