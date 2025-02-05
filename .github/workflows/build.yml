@@ -1,32 +1,13 @@
 name: Build
 
 on:
-  # 推送到 main 分支时触发
   push:
-    branches: 
-      - main
     tags:
-      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
-  # 也可以添加手动触发选项
-  workflow_dispatch:
+      - '*'  # 每次推送标签时触发
 
 jobs:
   build:
-    permissions:
-      contents: write
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [macos-latest, windows-latest]
-        include:
-          - os: macos-latest
-            build_command: build:mac
-            artifact_name: "HSMod-Mac-*-Installer.dmg"
-          - os: windows-latest
-            build_command: build:win
-            artifact_name: "HSMod-Windows-*-Setup.exe"
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
@@ -39,31 +20,13 @@ jobs:
 
       - name: Get Package Version
         id: package-version
-        shell: bash
-        run: |
-          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      # 设置依赖缓存
-      - name: Setup npm cache
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
 
       - name: Install Dependencies
         run: npm install
 
       - name: Build Release Files
-        run: npm run ${{ matrix.build_command }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: List Release Directory
-        shell: bash
-        run: |
-          ls -R release/
+        run: npm run build  # 请确保你有一个 build 脚本来打包应用
 
       - name: Create Release
         uses: softprops/action-gh-release@v1
@@ -71,18 +34,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v${{ steps.package-version.outputs.version }}
-          name: "App v${{ steps.package-version.outputs.version }}"
+          tag_name: v${{ env.version }}
+          name: "Release v${{ env.version }}"
           body: |
             Changes in this Release:
             - First release for testing
           draft: true
           prerelease: false
-          files: release/${{ steps.package-version.outputs.version }}/${{ matrix.artifact_name }}
-
-      - name: Upload Artifact for Debug
-        uses: actions/upload-artifact@v3
-        with:
-          name: release_on_${{ matrix.os }}
-          path: release/${{ steps.package-version.outputs.version }}
-          retention-days: 5
+          files: release/${{ env.version }}/HSMod-Mac-${{ env.version }}-Installer.dmg  # 请确保这路径和你的构建产物一致
