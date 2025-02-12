@@ -13,6 +13,7 @@ export function ProcessStatusCheck() {
   })
 
   const checkStatus = async () => {
+    setShowDialog(false)
     try {
       const result = await logsService.getProcessStatus()
       setStatus(result)
