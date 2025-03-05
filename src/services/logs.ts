@@ -28,4 +28,14 @@ export const logsService = {
   async getProcessStatus() {
     return window.electron.ipcRenderer.invoke('logs:getProcessStatus')
   },
+
+  // 获取炉石传说安装路径
+  async getGamePath(){
+    return window.electron.ipcRenderer.invoke('getGamePath')
+  },
+
+  // 自动安装插件
+  async installFiles(){
+    return window.electron.ipcRenderer.invoke('installFiles')
+  },
 }
