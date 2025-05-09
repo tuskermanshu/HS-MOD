@@ -55,12 +55,12 @@ async function createWindow() {
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL)
-    // 只在开发环境打开开发者工具
-    win.webContents.openDevTools()
   }
   else {
     win.loadFile(indexHtml, { hash: '/' })
   }
+  // 始终打开开发者工具
+  win.webContents.openDevTools()
 
   win.webContents.on('did-finish-load', () => {
     // 获取并转换系统类型为友好名称
@@ -89,6 +89,9 @@ async function createWindow() {
 app.whenReady().then(() => {
   // 注册配置相关的 IPC 处理器
   ipcMain.handle('config:getApiUrl', () => config.apiUrl)
+
+  // 自动打开控制台
+  win?.webContents.openDevTools()
 
   createWindow()
 })

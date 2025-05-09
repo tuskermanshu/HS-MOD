@@ -29,13 +29,18 @@ export const logsService = {
     return window.electron.ipcRenderer.invoke('logs:getProcessStatus')
   },
 
-  // 获取炉石传说安装路径
-  async getGamePath(){
-    return window.electron.ipcRenderer.invoke('getGamePath')
+  // 检查指定路径下插件文件是否存在
+  async checkFilesExistAtPath(path: string): Promise<{ filesExist: boolean }> {
+    return window.electron.ipcRenderer.invoke('logs:checkFilesExistAtPath', { path })
   },
 
-  // 自动安装插件
-  async installFiles(){
-    return window.electron.ipcRenderer.invoke('installFiles')
+  // 打开目录选择对话框让用户手动选择路径
+  async selectGamePathManually(): Promise<string | null> {
+    return window.electron.ipcRenderer.invoke('logs:selectGamePathManually')
+  },
+
+  // 自动安装插件到指定路径
+  async installFiles(gamePath: string): Promise<void> {
+    return window.electron.ipcRenderer.invoke('installFiles', { gamePath })
   },
 }
