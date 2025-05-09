@@ -97,6 +97,7 @@ export function setupLogsHandlers() {
   })
 
   // 获取进程和登录状态
+  /*
   ipcMain.handle('logs:getProcessStatus', async () => {
     try {
       const response = await fetch(`${config.apiUrl}/alive`)
@@ -114,6 +115,7 @@ export function setupLogsHandlers() {
       throw error instanceof Error ? error : new Error('获取状态失败')
     }
   })
+  */
 
   // 检查指定路径下文件是否存在 - 带缓存
   ipcMain.handle('logs:checkFilesExistAtPath', async (_event, { path: filePath }: { path: string }) => {
