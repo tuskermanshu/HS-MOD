@@ -1,5 +1,5 @@
 import { ProcessContentCheck } from '@/components/contentCheck'
-import { ProcessStatusCheck } from '@/components/ProcessStatusCheck'
+// import { ProcessStatusCheck } from '@/components/ProcessStatusCheck'
 import { Sidebar } from '@/components/Sidebar'
 import { Button } from '@/components/ui/button'
 import {
@@ -43,7 +43,7 @@ export function MainLayout({ children }: MainLayoutProps) {
   return (
     <div className="flex h-full">
       <ProcessContentCheck />
-      <ProcessStatusCheck />
+      {/* <ProcessStatusCheck /> */}
       {/* 移动端/平板侧边栏 */}
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetTrigger asChild>

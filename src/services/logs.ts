@@ -25,9 +25,11 @@ export const logsService = {
   },
 
   // 获取进程和登录状态
+  /*
   async getProcessStatus() {
     return window.electron.ipcRenderer.invoke('logs:getProcessStatus')
   },
+  */
 
   // 检查指定路径下插件文件是否存在
   async checkFilesExistAtPath(path: string): Promise<{ filesExist: boolean }> {
